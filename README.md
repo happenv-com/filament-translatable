@@ -10,11 +10,10 @@ Filament Translatable is a set of tools that help manage translations.
 ## Installation
 
 | Filament Version | Filament Translate Field Version |
-|------------------|---------------------------|
-| 3.x              | 2.x
-| 4.x              | 3.x
-| 5.x              | 3.x
-
+| ---------------- | -------------------------------- |
+| 3.x              | 2.x                              |
+| 4.x              | 3.x                              |
+| 5.x              | 3.x                              |
 
 You can install the package via composer:
 
@@ -27,7 +26,6 @@ Publish the assets:
 ```bash
 php artisan filament:assets
 ```
-
 
 ## Configuration
 
@@ -77,16 +75,15 @@ public function panel(Panel $panel): Panel
         ->plugin(FilamentTranslatablePlugin::make());
 }
 ```
-  
+
 ### Setting translatable locales
- 
+
 To set up the locales that can be used to translate content, pass an array of locales to the `locales()` plugin method:
-  
+
 ```php
 FilamentTranslatablePlugin::make()
      ->locales(['en', 'pl', 'fr']),
 ```
-
 
 You can set locale labels using key => value array:
 
@@ -99,6 +96,7 @@ FilamentTranslatablePlugin::make()
 ```
 
 Also, you can pass a Closure:
+
 ```php
 FilamentTranslatablePlugin::make()
     ->locales(fn () => Language::pluck('code', 'name'))
@@ -217,7 +215,6 @@ TextInput::make('price')
 > [!CAUTION]
 > Be sure to set field-specific methods like `required()` or `requiredDefaultLocale()` **before** calling the `translatable()` method.
 
-
 ### `Translations` component
 
 By using the `Translations` component, you can easily configure your [form fields](https://filamentphp.com/docs/4.x/forms/fields/getting-started) to support multiple languages and provide translations for each locale.
@@ -247,7 +244,6 @@ By default, the translatable locales can be set globally for all translation for
 Translations::make('translations')
     ->locales(['en', 'es'])
 ```
-
 
 #### Setting the translatable label for a particular field
 
@@ -310,7 +306,7 @@ Translations::make('translations')
 
 ```
 
-#### Adding action 
+#### Adding action
 
 You may add actions before each container of child components using the `actions()` method:
 
@@ -344,7 +340,6 @@ Translations::make()
     ])
 ```
 
-
 #### Injecting the locale to form field
 
 If you wish to access the current locale instance for the field, define a `$locale` parameter:
@@ -359,11 +354,12 @@ Translations::make()
 ```
 
 #### Removing the styled container
+
 By default, the translate component and its content are wrapped in a container styled as a card. You may remove the styled container using `contained()`:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
- 
+
 Translations::make()
     ->contained(false)
 ```
@@ -374,7 +370,7 @@ You can display translations as vertical tabs:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
- 
+
 Translations::make()
     ->vertical()
 ```
@@ -385,19 +381,20 @@ You can customize plugin settings directly on the component:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
- 
+
 Translations::make()
     ->displayNamesInLocaleLabels(false)
     ->displayFlagsInLocaleLabels(true)
     ->flagWidth('48px')
 ```
 
-#### Exclude 
+#### Exclude
+
 The `exclude` feature allows you to specify fields that you don't want to include in the translation process. This can be useful for fields that contain dynamic content or that shouldn't be translated into other languages.
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
- 
+
 Translations::make('translations')
     ->schema([
         Forms\Components\TextInput::make('title'),
@@ -405,7 +402,9 @@ Translations::make('translations')
     ])
     ->exclude(['description'])
 ```
+
 Without `exclude`:
+
 ```json
 {
     "title": {
@@ -420,7 +419,9 @@ Without `exclude`:
     }
 }
 ```
+
 With `exclude`:
+
 ```json
 {
     "title": {
@@ -431,6 +432,7 @@ With `exclude`:
     "description": null
 }
 ```
+
 ## Publishing Views
 
 To publish the views, run:
@@ -467,4 +469,3 @@ If you discover any security-related issues, please email code@webard.me instead
 ## License
 
 Filament Translatable is open-sourced software licensed under the [MIT license](LICENSE.md).
-
