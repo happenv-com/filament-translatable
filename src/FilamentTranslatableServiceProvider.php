@@ -13,13 +13,6 @@ use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 class FilamentTranslatableServiceProvider extends PackageServiceProvider
 {
-    /**
-     * @var bool
-     */
-    public $requiredDefaultLocale;
-
-    public $defaultLocale;
-
     public static string $name = 'filament-translatable';
 
     public function configurePackage(Package $package): void
@@ -41,24 +34,39 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
             $this->getAssetPackageName()
         );
 
-        Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true): static {
-            // @phpstan-ignore property.notFound
+        Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->requiredDefaultLocale = true;
 
             return $this;
         });
 
-        Field::macro('getDefaultLocale', fn (): ?string => $this->defaultLocale ?? null);
+        Field::macro('getDefaultLocale', function (): ?string {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore varTag.nativeType
+            return $this->defaultLocale ?? null;
+        });
 
-        Field::macro('defaultLocale', function (?string $locale = null): static {
-            // @phpstan-ignore property.notFound
+        Field::macro('defaultLocale', function (?string $locale = null): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->defaultLocale = $locale;
 
             return $this;
         });
 
-        Field::macro('requiredLocale', function (string $locale, bool | Closure $condition = true): static {
-            // @phpstan-ignore property.notFound
+        Field::macro('requiredLocale', function (string $locale, bool | Closure $condition = true): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->translationFieldDecorators[$locale][] = function (Field $field) use ($condition): \Filament\Forms\Components\Field {
                 $field->required($condition);
 
@@ -68,15 +76,21 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
             return $this;
         });
 
-        Field::macro('decorateTranslationField', function (string $locale, ?Closure $decorator = null): static {
-            // @phpstan-ignore property.notFound
+        Field::macro('decorateTranslationField', function (string $locale, ?Closure $decorator = null): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->translationFieldDecorators[$locale][] = $decorator;
 
             return $this;
         });
 
-        Field::macro('translatable', function (bool $translatable = true, ?array $locales = null, ?Closure $translationFieldDecorator = null) {
-
+        Field::macro('translatable', function (bool $translatable = true, ?array $locales = null, ?Closure $translationFieldDecorator = null): Translations | Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore varTag.nativeType
             if (! $translatable) {
                 return $this;
             }
@@ -85,7 +99,6 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
              * @var Field $field
              * @var Field $this
              */
-            // @phpstan-ignore varTag.nativeType
             $field = $this->getClone();
 
             $tabsField = Translations::make($field->getName() . '_translations')
