@@ -2,6 +2,9 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
 [![Total Downloads](https://img.shields.io/packagist/dt/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
+![Tests](https://github.com/webard/filament-translatable/actions/workflows/run-tests.yml/badge.svg)
+![PHPStan](https://github.com/webard/filament-translatable/actions/workflows/phpstan.yml/badge.svg)
+![Rector](https://github.com/webard/filament-translatable/actions/workflows/rector.yml/badge.svg)
 
 Filament Translatable is a set of tools that help manage translations.
 

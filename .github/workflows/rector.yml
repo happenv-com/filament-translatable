@@ -1,0 +1,41 @@
+name: Rector
+
+on:
+  push:
+    paths:
+      - '**.php'
+      - 'rector.php'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rector:
+    name: rector
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--optimize-autoloader --classmap-authoritative'
+
+      - name: Cache Rector
+        uses: actions/cache@v5
+        with:
+          path: ./storage/framework/rector
+          key: ${{ runner.os }}-rector-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-rector-
+
+      - name: Run Rector
+        run: ./vendor/bin/rector process --dry-run --ansi --no-progress-bar
