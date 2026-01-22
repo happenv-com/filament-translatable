@@ -97,9 +97,6 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
 
             return $tabsField;
         });
-
-        // Testing
-        Testable::mixin(new TestsFilamentTranslateField);
     }
 
     protected function getAssetPackageName(): ?string
