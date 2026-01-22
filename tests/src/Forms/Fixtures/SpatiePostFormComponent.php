@@ -14,6 +14,7 @@ class SpatiePostFormComponent extends Livewire
 {
     public ?SpatiePost $record = null;
 
+    #[\Override]
     public function mount(?SpatiePost $record = null): void
     {
         $this->record = $record ?? new SpatiePost;

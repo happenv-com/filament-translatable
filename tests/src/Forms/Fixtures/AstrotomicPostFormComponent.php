@@ -14,6 +14,7 @@ class AstrotomicPostFormComponent extends Livewire
 {
     public ?AstrotomicPost $record = null;
 
+    #[\Override]
     public function mount(?AstrotomicPost $record = null): void
     {
         $this->record = $record ?? new AstrotomicPost;

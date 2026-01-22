@@ -248,6 +248,7 @@ class Translations extends Tabs
         ]);
     }
 
+    #[\Override]
     public function getActiveTab(): int
     {
         if ($this->isTabPersistedInQueryString()) {
@@ -399,6 +400,7 @@ class Translations extends Tabs
     /**
      * @return array<mixed>
      */
+    #[\Override]
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         if ($parameterName === 'locales') {

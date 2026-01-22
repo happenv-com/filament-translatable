@@ -9,6 +9,7 @@ class DatabaseTestCase extends TestCase
 {
     use RefreshDatabase;
 
+    #[\Override]
     protected function getPackageProviders($app): array
     {
         return [
@@ -17,6 +18,7 @@ class DatabaseTestCase extends TestCase
         ];
     }
 
+    #[\Override]
     public function getEnvironmentSetUp($app): void
     {
         parent::getEnvironmentSetUp($app);
