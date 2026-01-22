@@ -21,6 +21,8 @@ jobs:
 
       - name: Install composer dependencies
         uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--dev --optimize-autoloader'
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github
