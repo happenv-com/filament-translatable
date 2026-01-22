@@ -21,7 +21,6 @@ class Translations extends Tabs
     /**
      * @var view-string
      */
-    // @phpstan-ignore property.defaultValue
     protected string $view = 'filament-translatable::forms.components.translations';
 
     /**
@@ -172,12 +171,10 @@ class Translations extends Tabs
 
         foreach ($locales as $key => $value) {
             // If the key is an integer, create a new Locale with the code only
-            if (is_int($key)) {
-                if (is_string($value)) {
-                    $preparedLocales[$key] = new Locale($value);
+            if (is_int($key) && is_string($value)) {
+                $preparedLocales[$key] = new Locale($value);
 
-                    continue;
-                }
+                continue;
             }
 
             // If the key is a string, create a new Locale with the key as code and value as label
@@ -198,7 +195,7 @@ class Translations extends Tabs
     {
         $label = null;
 
-        if ($this->hasFlagsInLocaleLabels() && $withFlag === true) {
+        if ($this->hasFlagsInLocaleLabels() && $withFlag) {
             $label .= '<img src="' . \asset($locale->flag) . '" style="width:' . $this->getFlagWidth() . ';max-width:' . $this->getFlagWidth() . '" alt="' . $locale->label . '" class="inline-block align-middle' . ($this->hasNamesInLocaleLabels() ? ' me-2' : '') . '" />';
         }
 
@@ -207,9 +204,9 @@ class Translations extends Tabs
 
         }
 
-        $label = $label ?? $locale->code;
-        if ($this->hasFlagsInLocaleLabels() && $withFlag === true) {
-            $label = new HtmlString('<div class="text-nowrap">' . $label . '</div>');
+        $label ??= $locale->code;
+        if ($this->hasFlagsInLocaleLabels() && $withFlag) {
+            return new HtmlString('<div class="text-nowrap">' . $label . '</div>');
         }
 
         return $label;
@@ -294,7 +291,7 @@ class Translations extends Tabs
 
                         ->schema(
                             (new Collection($this->getChildComponentsByLocale($locale->code)['default']))
-                                ->map(fn ($component) => $this->prepareTranslateLocaleComponent($component, $locale))
+                                ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $component): \Illuminate\Contracts\Support\Htmlable | string => $this->prepareTranslateLocaleComponent($component, $locale))
                                 ->all()
                         ),
                 ])
@@ -336,7 +333,7 @@ class Translations extends Tabs
                 $localeComponent->label($this->getFieldTranslatableLabel($component, $locale) ?? $component->getLabel());
 
                 $localeLabel = $this->getLocaleLabel($locale, false);
-                $performedLocaleLabel = $this->preformLocaleLabelUsing
+                $performedLocaleLabel = $this->preformLocaleLabelUsing instanceof \Closure
                     ? $this->evaluate($this->preformLocaleLabelUsing, [
                         'locale' => $locale,
                         'label' => $localeLabel,
@@ -389,7 +386,7 @@ class Translations extends Tabs
 
                 $localeComponent->schema(
                     collect($childComponents)
-                        ->map(fn ($childComponent) => $this->prepareTranslateLocaleComponent($childComponent, $locale))
+                        ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $childComponent): \Illuminate\Contracts\Support\Htmlable | string => $this->prepareTranslateLocaleComponent($childComponent, $locale))
                         ->all()
                 );
             }
@@ -403,7 +400,7 @@ class Translations extends Tabs
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
-        if ($parameterName == 'locales') {
+        if ($parameterName === 'locales') {
             return [$this->getLocales()];
         }
 

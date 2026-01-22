@@ -4,7 +4,6 @@ namespace Webard\FilamentTranslatable\Forms\Component\Translations;
 
 class Tab extends \Filament\Schemas\Components\Tabs\Tab
 {
-    // @phpstan-ignore property.defaultValue
     protected string $view = 'filament-translatable::forms.components.translation-tab';
 
     protected ?string $locale = null;

@@ -12,22 +12,19 @@
     $actions = $getActions();
     $hasActions = filled($actions);
 
-    $childComponentsWithLocale = collect($getChildComponentContainers())->map(
-        fn($container) => $container->getComponents(),
-    );
-    $tabs = collect($childComponentsWithLocale)->map(
-        fn($components) => Arr::first($components, fn($component) => $component instanceof Tab),
-    );
+    $childComponentsWithLocale = collect($getChildComponentContainers())->map(fn ($container) => $container->getComponents());
+    $tabs = collect($childComponentsWithLocale)->map(fn ($components) => Arr::first($components, fn ($component) => $component instanceof Tab));
 
     $tabCount = $tabs->count();
-
 @endphp
+
 @if (! $this instanceof \Filament\Tables\Contracts\HasTable)
- <x-filament-actions::modals />
- @endif
+    <x-filament-actions::modals />
+@endif
 
 @if (blank($livewireProperty))
-    <div x-load
+    <div
+        x-load
         x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('tabs', 'filament/schemas') }}"
         x-data="tabsSchemaComponent({
             activeTab: @js($activeTab),
@@ -35,24 +32,45 @@
             livewireId: @js($this->getId()),
             tab: @if ($isTabPersisted() && filled($persistenceKey = $getKey())) $persist(null).as('tabs-{{ $persistenceKey }}') @else @js(null) @endif,
             tabQueryStringKey: @js($getTabQueryStringKey()),
-        })" wire:ignore.self
-        {{ $attributes->merge(
-                [
-                    'id' => $getId(),
-                    'wire:key' => $getLivewireKey() . '.container',
-                ],
-                escape: false,
-            )->merge($getExtraAttributes(), escape: false)->merge($getExtraAlpineAttributes(), escape: false)->class(['fi-sc-tabs', 'fi-contained' => $isContained, 'fi-vertical' => $isVertical && $tabCount > 1]) }}>
-        <input type="hidden"
-            value="{{ collect($tabs)->filter(static fn(Tab $tab): bool => $tab->isVisible())->map(static fn(Tab $tab) => $tab->getKey(isAbsolute: false))->values()->toJson() }}"
-            x-ref="tabsData" />
+        })"
+        wire:ignore.self
+        {{
+            $attributes
+                ->merge(
+                    [
+                        'id' => $getId(),
+                        'wire:key' => $getLivewireKey() . '.container',
+                    ],
+                    escape: false,
+                )
+                ->merge($getExtraAttributes(), escape: false)
+                ->merge($getExtraAlpineAttributes(), escape: false)
+                ->class(['fi-sc-tabs', 'fi-contained' => $isContained, 'fi-vertical' => $isVertical && $tabCount > 1])
+        }}
+    >
+        <input
+            type="hidden"
+            value="{{ collect($tabs)->filter(static fn (Tab $tab): bool => $tab->isVisible())->map(static fn (Tab $tab) => $tab->getKey(isAbsolute: false))->values()->toJson() }}"
+            x-ref="tabsData"
+        />
 
-        <x-filament::tabs :contained="$isContained" :label="$label" :vertical="$isVertical" x-cloak :hidden="$tabCount === 1">
+        <x-filament::tabs
+            :contained="$isContained"
+            :label="$label"
+            :vertical="$isVertical"
+            x-cloak
+            :hidden="$tabCount === 1"
+        >
             @foreach ($getStartRenderHooks() as $startRenderHook)
                 {{ \Filament\Support\Facades\FilamentView::renderHook($startRenderHook, scopes: $renderHookScopes) }}
             @endforeach
-            <div class="fi-tt-tabs {{ $isVertical ? 'fi-tt-tabs-vertical' : '' }}">
-                <div class="fi-tt-tabs-langs {{ $isVertical ? 'fi-tt-tabs-vertical' : '' }}">
+
+            <div
+                class="fi-tt-tabs {{ $isVertical ? 'fi-tt-tabs-vertical' : '' }}"
+            >
+                <div
+                    class="fi-tt-tabs-langs {{ $isVertical ? 'fi-tt-tabs-vertical' : '' }}"
+                >
                     @foreach ($tabs as $tab)
                         @php
                             $tabKey = $tab->getKey(isAbsolute: false);
@@ -66,11 +84,20 @@
                             $tabExtraAttributeBag = $tab->getExtraAttributeBag();
                         @endphp
 
-                        <x-filament::tabs.item :alpine-active="'tab === \'' . $tabKey . '\''" :badge="$tabBadge" :badge-color="$tabBadgeColor" :badge-icon="$tabBadgeIcon"
-                            :badge-icon-position="$tabBadgeIconPosition" :badge-tooltip="$tabBadgeTooltip" :icon="$tabIcon" :icon-position="$tabIconPosition"
-                            :x-on:click="'tab = \'' . $tabKey . '\''" :attributes="$tabExtraAttributeBag" :hidden="$tabCount === 1">
+                        <x-filament::tabs.item
+                            :alpine-active="'tab === \'' . $tabKey . '\''"
+                            :badge="$tabBadge"
+                            :badge-color="$tabBadgeColor"
+                            :badge-icon="$tabBadgeIcon"
+                            :badge-icon-position="$tabBadgeIconPosition"
+                            :badge-tooltip="$tabBadgeTooltip"
+                            :icon="$tabIcon"
+                            :icon-position="$tabIconPosition"
+                            :x-on:click="'tab = \'' . $tabKey . '\''"
+                            :attributes="$tabExtraAttributeBag"
+                            :hidden="$tabCount === 1"
+                        >
                             {{ $tab->getLabel() }}
-
                         </x-filament::tabs.item>
                     @endforeach
                 </div>
@@ -79,60 +106,53 @@
                     {{ \Filament\Support\Facades\FilamentView::renderHook($endRenderHook, scopes: $renderHookScopes) }}
                 @endforeach
 
-                @if ($hasActions && !$isVertical)
+                @if ($hasActions && ! $isVertical)
                     <div>
                         @foreach ($tabs as $tab)
-                            <div class="flex flex-auto fi-ac"
+                            <div
+                                class="fi-ac flex flex-auto"
                                 x-bind:class="{
                                     'hidden': tab !== @js($tab->getId()),
-                                }">
+                                }"
+                            >
                                 @foreach ($actions as $action)
                                     @if ($action(['locale' => $tab->getLocale()])->isVisible())
                                         {{ $action(['locale' => $tab->getLocale()]) }}
-
                                     @endif
-
                                 @endforeach
-
                             </div>
                         @endforeach
                     </div>
                 @endif
             </div>
-
         </x-filament::tabs>
 
-
- @if ($hasActions && ($isVertical || $tabCount === 1))
-        <div class="flex flex-col grow">
-             @foreach ($tabs as $tab)
-                            <div class="fi-ac pt-6 pe-6 justify-end"
-                                x-bind:class="{
-                                    'hidden': tab !== @js($tab->getId()),
-                                }">
-                                @foreach ($actions as $action)
-                                    @if ($action(['locale' => $tab->getLocale()])->isVisible())
-                                        {{ $action(['locale' => $tab->getLocale()]) }}
-
-                                    @endif
-
-                                @endforeach
-
-                            </div>
+        @if ($hasActions && ($isVertical || $tabCount === 1))
+            <div class="flex grow flex-col">
+                @foreach ($tabs as $tab)
+                    <div
+                        class="fi-ac justify-end pe-6 pt-6"
+                        x-bind:class="{
+                            'hidden': tab !== @js($tab->getId()),
+                        }"
+                    >
+                        @foreach ($actions as $action)
+                            @if ($action(['locale' => $tab->getLocale()])->isVisible())
+                                {{ $action(['locale' => $tab->getLocale()]) }}
+                            @endif
                         @endforeach
+                    </div>
+                @endforeach
 
-        @foreach ($tabs as $tab)
-            {{ $tab }}
-        @endforeach
-
-        </div>
-    @else
-    @foreach ($tabs as $tab)
-            {{ $tab }}
-        @endforeach
-    @endif
-
-
+                @foreach ($tabs as $tab)
+                    {{ $tab }}
+                @endforeach
+            </div>
+        @else
+            @foreach ($tabs as $tab)
+                {{ $tab }}
+            @endforeach
+        @endif
     </div>
 @else
     @php
@@ -140,14 +160,24 @@
     @endphp
 
     <div
-        {{ $attributes->merge(
-                [
-                    'id' => $getId(),
-                    'wire:key' => $getLivewireKey() . '.container',
-                ],
-                escape: false,
-            )->merge($getExtraAttributes(), escape: false)->class(['fi-sc-tabs', 'fi-contained' => $isContained, 'fi-vertical' => $isVertical]) }}>
-        <x-filament::tabs :contained="$isContained" :label="$label" :vertical="$isVertical">
+        {{
+            $attributes
+                ->merge(
+                    [
+                        'id' => $getId(),
+                        'wire:key' => $getLivewireKey() . '.container',
+                    ],
+                    escape: false,
+                )
+                ->merge($getExtraAttributes(), escape: false)
+                ->class(['fi-sc-tabs', 'fi-contained' => $isContained, 'fi-vertical' => $isVertical])
+        }}
+    >
+        <x-filament::tabs
+            :contained="$isContained"
+            :label="$label"
+            :vertical="$isVertical"
+        >
             @foreach ($getStartRenderHooks() as $startRenderHook)
                 {{ \Filament\Support\Facades\FilamentView::renderHook($startRenderHook, scopes: $renderHookScopes) }}
             @endforeach
@@ -165,10 +195,18 @@
                     $tabKey = strval($tabKey);
                 @endphp
 
-                <x-filament::tabs.item :active="$activeTab === $tabKey" :badge="$tabBadge" :badge-color="$tabBadgeColor" :badge-icon="$tabBadgeIcon"
-                    :badge-icon-position="$tabBadgeIconPosition" :badge-tooltip="$tabBadgeTooltip" :icon="$tabIcon" :icon-position="$tabIconPosition"
+                <x-filament::tabs.item
+                    :active="$activeTab === $tabKey"
+                    :badge="$tabBadge"
+                    :badge-color="$tabBadgeColor"
+                    :badge-icon="$tabBadgeIcon"
+                    :badge-icon-position="$tabBadgeIconPosition"
+                    :badge-tooltip="$tabBadgeTooltip"
+                    :icon="$tabIcon"
+                    :icon-position="$tabIconPosition"
                     :wire:click="'$set(\'' . $livewireProperty . '\', ' . (filled($tabKey) ? ('\'' . $tabKey . '\'') : 'null') . ')'"
-                    :attributes="$tabExtraAttributeBag">
+                    :attributes="$tabExtraAttributeBag"
+                >
                     {{ $tab->getLabel() ?? $this->generateTabLabel($tabKey) }}
                 </x-filament::tabs.item>
             @endforeach

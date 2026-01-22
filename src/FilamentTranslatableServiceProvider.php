@@ -7,11 +7,9 @@ use Filament\Forms\Components\Field;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
-use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Webard\FilamentTranslatable\Forms\Component\Translations;
-use Webard\FilamentTranslatable\Testing\TestsFilamentTranslateField;
 
 class FilamentTranslatableServiceProvider extends PackageServiceProvider
 {
@@ -36,27 +34,40 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
             $this->getAssetPackageName()
         );
 
-        Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true) {
-            // @phpstan-ignore property.notFound
+        Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->requiredDefaultLocale = true;
 
             return $this;
         });
 
         Field::macro('getDefaultLocale', function (): ?string {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore varTag.nativeType
             return $this->defaultLocale ?? null;
         });
 
-        Field::macro('defaultLocale', function (?string $locale = null) {
-            // @phpstan-ignore property.notFound
+        Field::macro('defaultLocale', function (?string $locale = null): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->defaultLocale = $locale;
 
             return $this;
         });
 
-        Field::macro('requiredLocale', function (string $locale, bool | Closure $condition = true) {
-            // @phpstan-ignore property.notFound
-            $this->translationFieldDecorators[$locale][] = function (Field $field) use ($condition) {
+        Field::macro('requiredLocale', function (string $locale, bool | Closure $condition = true): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
+            $this->translationFieldDecorators[$locale][] = function (Field $field) use ($condition): \Filament\Forms\Components\Field {
                 $field->required($condition);
 
                 return $field;
@@ -65,15 +76,21 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
             return $this;
         });
 
-        Field::macro('decorateTranslationField', function (string $locale, ?Closure $decorator = null) {
-            // @phpstan-ignore property.notFound
+        Field::macro('decorateTranslationField', function (string $locale, ?Closure $decorator = null): Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore property.notFound, varTag.nativeType
             $this->translationFieldDecorators[$locale][] = $decorator;
 
             return $this;
         });
 
-        Field::macro('translatable', function (bool $translatable = true, ?array $locales = null, ?Closure $translationFieldDecorator = null) {
-
+        Field::macro('translatable', function (bool $translatable = true, ?array $locales = null, ?Closure $translationFieldDecorator = null): Translations | Field {
+            /**
+             * @var Field $this
+             */
+            // @phpstan-ignore varTag.nativeType
             if (! $translatable) {
                 return $this;
             }
@@ -82,7 +99,6 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
              * @var Field $field
              * @var Field $this
              */
-            // @phpstan-ignore varTag.nativeType
             $field = $this->getClone();
 
             $tabsField = Translations::make($field->getName() . '_translations')
@@ -91,15 +107,12 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
                     $field,
                 ]);
 
-            if ($translationFieldDecorator) {
-                $tabsField = $translationFieldDecorator($tabsField);
+            if ($translationFieldDecorator instanceof \Closure) {
+                return $translationFieldDecorator($tabsField);
             }
 
             return $tabsField;
         });
-
-        // Testing
-        Testable::mixin(new TestsFilamentTranslateField);
     }
 
     protected function getAssetPackageName(): ?string
