@@ -10,7 +10,7 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-it('can use translations component with requiredDefaultLocale', function () {
+it('can use translations component with requiredDefaultLocale', function (): void {
     $component = livewire(TestComponentWithMacro::class);
 
     // The component should create a Translations component
@@ -21,23 +21,23 @@ it('can use translations component with requiredDefaultLocale', function () {
     expect($keys)->toContain('title-translations::data::tabs');
 });
 
-it('translations component creates fields for each locale', function () {
+it('translations component creates fields for each locale', function (): void {
     $component = livewire(TestComponentWithMacro::class);
 
-    $component->assertSchemaComponentExists('title.en', checkComponentUsing: function ($field) {
+    $component->assertSchemaComponentExists('title.en', checkComponentUsing: function ($field): true {
         expect($field)->toBeInstanceOf(TextInput::class);
 
         return true;
     });
 
-    $component->assertSchemaComponentExists('title.fr', checkComponentUsing: function ($field) {
+    $component->assertSchemaComponentExists('title.fr', checkComponentUsing: function ($field): true {
         expect($field)->toBeInstanceOf(TextInput::class);
 
         return true;
     });
 });
 
-it('can fill data in translations component', function () {
+it('can fill data in translations component', function (): void {
     $data = [
         'title' => ['en' => 'English Title', 'fr' => 'French Title'],
     ];
@@ -47,11 +47,11 @@ it('can fill data in translations component', function () {
         ->assertSchemaStateSet($data);
 });
 
-it('applies field decorators per locale', function () {
+it('applies field decorators per locale', function (): void {
     $component = livewire(TestComponentWithDecoratedField::class);
 
     // Check English field has prefix '$'
-    $component->assertSchemaComponentExists('price.en', checkComponentUsing: function ($field) {
+    $component->assertSchemaComponentExists('price.en', checkComponentUsing: function ($field): true {
         expect($field)->toBeInstanceOf(TextInput::class);
         expect($field->getPrefixLabel())->toBe('$');
 
@@ -59,7 +59,7 @@ it('applies field decorators per locale', function () {
     });
 
     // Check Polish field has suffix 'PLN'
-    $component->assertSchemaComponentExists('price.pl', checkComponentUsing: function ($field) {
+    $component->assertSchemaComponentExists('price.pl', checkComponentUsing: function ($field): true {
         expect($field)->toBeInstanceOf(TextInput::class);
         expect($field->getSuffixLabel())->toBe('PLN');
 
@@ -67,17 +67,13 @@ it('applies field decorators per locale', function () {
     });
 });
 
-it('requiredDefaultLocale makes field required only for default locale', function () {
+it('requiredDefaultLocale makes field required only for default locale', function (): void {
     $component = livewire(TestComponentWithMacro::class);
 
     // The default locale is 'en'
     // The field should be required for 'en' locale
-    $component->assertSchemaComponentExists('title.en', checkComponentUsing: function ($field) {
-        return $field->isRequired();
-    });
+    $component->assertSchemaComponentExists('title.en', checkComponentUsing: fn ($field) => $field->isRequired());
 
     // French field should not be required
-    $component->assertSchemaComponentExists('title.fr', checkComponentUsing: function ($field) {
-        return ! $field->isRequired();
-    });
+    $component->assertSchemaComponentExists('title.fr', checkComponentUsing: fn ($field): bool => ! $field->isRequired());
 });

@@ -35,7 +35,7 @@ class TestComponentWithActions extends Livewire
                     ->actions([
                         Action::make('fillTitle')
                             ->label('Fill Title')
-                            ->action(function (array $arguments) {
+                            ->action(function (array $arguments): void {
                                 $locale = $arguments['locale'];
                                 $this->actionCallLog[] = ['action' => 'fillTitle', 'locale' => $locale];
                             }),

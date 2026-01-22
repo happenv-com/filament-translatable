@@ -6,7 +6,7 @@ use Webard\FilamentTranslatable\Tests\Models\AstrotomicPost;
 
 uses(DatabaseTestCase::class);
 
-it('can save translations to separate table with Astrotomic package', function () {
+it('can save translations to separate table with Astrotomic package', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'John Doe';
     $post->translateOrNew('en')->title = 'English Title';
@@ -32,7 +32,7 @@ it('can save translations to separate table with Astrotomic package', function (
     expect($savedPost->translate('pl')->content)->toBe('Polish Content');
 });
 
-it('stores Astrotomic translations in separate database table', function () {
+it('stores Astrotomic translations in separate database table', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'Jane Doe';
     $post->translateOrNew('en')->title = 'Title EN';
@@ -65,7 +65,7 @@ it('stores Astrotomic translations in separate database table', function () {
     ]);
 });
 
-it('can update Astrotomic translations', function () {
+it('can update Astrotomic translations', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'Author';
     $post->translateOrNew('en')->title = 'Original Title';
@@ -82,7 +82,7 @@ it('can update Astrotomic translations', function () {
     $this->assertDatabaseCount('astrotomic_post_translations', 1);
 });
 
-it('can create Astrotomic post with fill method using locale keys', function () {
+it('can create Astrotomic post with fill method using locale keys', function (): void {
     $post = AstrotomicPost::create([
         'author' => 'Array Author',
         'en' => [
@@ -101,7 +101,7 @@ it('can create Astrotomic post with fill method using locale keys', function () 
     expect($post->translate('fr')->content)->toBe('Array FR Content');
 });
 
-it('returns current locale translation by default for Astrotomic', function () {
+it('returns current locale translation by default for Astrotomic', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'Locale Author';
     $post->translateOrNew('en')->title = 'English';
@@ -124,7 +124,7 @@ it('returns current locale translation by default for Astrotomic', function () {
     expect($savedPost->title)->toBe('English');
 });
 
-it('deletes translations when post is deleted', function () {
+it('deletes translations when post is deleted', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'Delete Test';
     $post->translateOrNew('en')->title = 'EN';
@@ -147,7 +147,7 @@ it('deletes translations when post is deleted', function () {
     $this->assertDatabaseMissing('astrotomic_posts', ['id' => $postId]);
 });
 
-it('maintains foreign key relationship between main and translation tables', function () {
+it('maintains foreign key relationship between main and translation tables', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'FK Test';
     $post->translateOrNew('en')->title = 'FK EN';
@@ -164,7 +164,7 @@ it('maintains foreign key relationship between main and translation tables', fun
     expect($translation->title)->toBe('FK EN');
 });
 
-it('uses AstrotomicTranslatable trait for proper attribute formatting', function () {
+it('uses AstrotomicTranslatable trait for proper attribute formatting', function (): void {
     $post = new AstrotomicPost;
     $post->author = 'Trait Test';
     $post->translateOrNew('en')->title = 'EN Title';

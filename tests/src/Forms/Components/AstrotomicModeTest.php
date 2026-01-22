@@ -8,7 +8,7 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-it('uses astrotomic translation mode', function () {
+it('uses astrotomic translation mode', function (): void {
     $locales = ['en', 'fr'];
 
     $component = livewire(TestComponentWithAstrotomic::class, [
@@ -16,14 +16,14 @@ it('uses astrotomic translation mode', function () {
         'exclude' => [],
     ]);
 
-    $component->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function ($translations) {
+    $component->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function ($translations): true {
         expect($translations->getTranslationMode())->toBe(TranslationMode::Astrotomic);
 
         return true;
     });
 });
 
-it('creates fields with colon separator for astrotomic mode', function () {
+it('creates fields with colon separator for astrotomic mode', function (): void {
     $locales = ['en', 'fr'];
 
     $component = livewire(TestComponentWithAstrotomic::class, [
@@ -43,7 +43,7 @@ it('creates fields with colon separator for astrotomic mode', function () {
         ->and($keys)->toContain('content:fr');
 });
 
-it('can fill and assert data in astrotomic mode', function () {
+it('can fill and assert data in astrotomic mode', function (): void {
     $locales = ['en', 'fr'];
 
     $data = [

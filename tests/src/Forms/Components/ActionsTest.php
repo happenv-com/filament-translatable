@@ -7,7 +7,7 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-it('can register actions on translations component', function () {
+it('can register actions on translations component', function (): void {
     $locales = ['en', 'fr'];
 
     $component = livewire(TestComponentWithActions::class, [
@@ -17,7 +17,7 @@ it('can register actions on translations component', function () {
     $component->assertSchemaComponentExists('translations::data::tabs');
 
     // Check that tabs have actions registered
-    $component->assertSchemaComponentExists('en::data::tab', checkComponentUsing: function ($tab) {
+    $component->assertSchemaComponentExists('en::data::tab', checkComponentUsing: function ($tab): true {
         $actions = $tab->getActions();
         expect($actions)->toHaveCount(1);
         expect($actions)->toHaveKey('fillTitle');
@@ -26,7 +26,7 @@ it('can register actions on translations component', function () {
     });
 });
 
-it('registers actions on all locale tabs', function () {
+it('registers actions on all locale tabs', function (): void {
     $locales = ['en', 'fr', 'pl'];
 
     $component = livewire(TestComponentWithActions::class, [
@@ -35,7 +35,7 @@ it('registers actions on all locale tabs', function () {
 
     // Each tab should have the action registered
     foreach ($locales as $locale) {
-        $component->assertSchemaComponentExists("{$locale}::data::tab", checkComponentUsing: function ($tab) {
+        $component->assertSchemaComponentExists("{$locale}::data::tab", checkComponentUsing: function ($tab): true {
             $actions = $tab->getActions();
             expect($actions)->toHaveCount(1);
             expect($actions)->toHaveKey('fillTitle');
@@ -45,7 +45,7 @@ it('registers actions on all locale tabs', function () {
     }
 });
 
-it('action has access to locale through arguments', function () {
+it('action has access to locale through arguments', function (): void {
     $locales = ['en', 'fr'];
 
     $component = livewire(TestComponentWithActions::class, [
@@ -53,7 +53,7 @@ it('action has access to locale through arguments', function () {
     ]);
 
     // Check that actions are configured with locale argument
-    $component->assertSchemaComponentExists('en::data::tab', checkComponentUsing: function ($tab) {
+    $component->assertSchemaComponentExists('en::data::tab', checkComponentUsing: function ($tab): true {
         $action = $tab->getActions()['fillTitle'];
 
         // The action should have the locale argument configured

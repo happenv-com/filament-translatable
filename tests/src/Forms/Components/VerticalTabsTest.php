@@ -8,21 +8,21 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-it('can create vertical tabs', function () {
+it('can create vertical tabs', function (): void {
     $locales = ['en', 'fr'];
 
     livewire(TestComponentWithVerticalTranslate::class, [
         'locales' => $locales,
         'exclude' => [],
     ])
-        ->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function ($component) {
+        ->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function ($component): true {
             expect($component)->toBeInstanceOf(Translations::class);
 
             return true;
         });
 });
 
-it('can fill data in vertical tabs', function () {
+it('can fill data in vertical tabs', function (): void {
     $locales = ['en', 'fr'];
 
     $data = [
@@ -38,7 +38,7 @@ it('can fill data in vertical tabs', function () {
         ->assertSchemaStateSet($data);
 });
 
-it('creates fields for each locale in vertical tabs', function () {
+it('creates fields for each locale in vertical tabs', function (): void {
     $locales = ['en', 'fr', 'pl'];
 
     livewire(TestComponentWithVerticalTranslate::class, [

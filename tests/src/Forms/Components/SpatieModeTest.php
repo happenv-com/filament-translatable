@@ -8,7 +8,7 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-it('uses spatie translation mode by default', function () {
+it('uses spatie translation mode by default', function (): void {
     $locales = ['en', 'fr'];
 
     $component = livewire(TestComponentWithTranslate::class, [
@@ -16,14 +16,14 @@ it('uses spatie translation mode by default', function () {
         'exclude' => [],
     ]);
 
-    $component->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function ($translations) {
+    $component->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function ($translations): true {
         expect($translations->getTranslationMode())->toBe(TranslationMode::Spatie);
 
         return true;
     });
 });
 
-it('creates fields with dot separator for spatie mode', function () {
+it('creates fields with dot separator for spatie mode', function (): void {
     $locales = ['en', 'fr'];
 
     $component = livewire(TestComponentWithTranslate::class, [
@@ -42,7 +42,7 @@ it('creates fields with dot separator for spatie mode', function () {
         ->and($keys)->toContain('content.fr');
 });
 
-it('can fill and assert data in spatie mode', function () {
+it('can fill and assert data in spatie mode', function (): void {
     $locales = ['en', 'fr'];
 
     $data = [

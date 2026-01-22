@@ -25,8 +25,8 @@ class TestComponentWithDecoratedField extends Livewire
                     ->displayNamesInLocaleLabels(true)
                     ->schema([
                         TextInput::make('price')
-                            ->decorateTranslationField('pl', fn (TextInput $field) => $field->suffix('PLN'))
-                            ->decorateTranslationField('en', fn (TextInput $field) => $field->prefix('$')),
+                            ->decorateTranslationField('pl', fn (TextInput $field): \Filament\Forms\Components\TextInput => $field->suffix('PLN'))
+                            ->decorateTranslationField('en', fn (TextInput $field): \Filament\Forms\Components\TextInput => $field->prefix('$')),
                     ]),
             ])
             ->statePath('data');

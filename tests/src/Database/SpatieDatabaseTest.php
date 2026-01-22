@@ -5,7 +5,7 @@ use Webard\FilamentTranslatable\Tests\Models\SpatiePost;
 
 uses(DatabaseTestCase::class);
 
-it('can save translations to JSON column with Spatie package', function () {
+it('can save translations to JSON column with Spatie package', function (): void {
     $post = new SpatiePost;
     $post->author = 'John Doe';
     $post->setTranslation('title', 'en', 'English Title');
@@ -32,7 +32,7 @@ it('can save translations to JSON column with Spatie package', function () {
 
     // Verify translations are stored in the same table as JSON
     $rawData = $savedPost->getRawOriginal('title');
-    $titleTranslations = json_decode($rawData, true);
+    $titleTranslations = json_decode((string) $rawData, true);
 
     expect($titleTranslations)->toBeArray();
     expect($titleTranslations)->toHaveKey('en');
@@ -40,7 +40,7 @@ it('can save translations to JSON column with Spatie package', function () {
     expect($titleTranslations)->toHaveKey('pl');
 });
 
-it('stores Spatie translations in single database table', function () {
+it('stores Spatie translations in single database table', function (): void {
     $post = new SpatiePost;
     $post->author = 'Jane Doe';
     $post->setTranslation('title', 'en', 'Title EN');
@@ -57,7 +57,7 @@ it('stores Spatie translations in single database table', function () {
     ]);
 });
 
-it('can update Spatie translations', function () {
+it('can update Spatie translations', function (): void {
     $post = new SpatiePost;
     $post->author = 'Author';
     $post->setTranslation('title', 'en', 'Original Title');
@@ -71,7 +71,7 @@ it('can update Spatie translations', function () {
     expect($savedPost->getTranslation('title', 'en'))->toBe('Updated Title');
 });
 
-it('can create Spatie post with array of translations', function () {
+it('can create Spatie post with array of translations', function (): void {
     $post = SpatiePost::create([
         'author' => 'Array Author',
         'title' => [
@@ -90,7 +90,7 @@ it('can create Spatie post with array of translations', function () {
     expect($post->getTranslation('content', 'fr'))->toBe('Array FR Content');
 });
 
-it('returns current locale translation by default for Spatie', function () {
+it('returns current locale translation by default for Spatie', function (): void {
     app()->setLocale('fr');
 
     $post = new SpatiePost;

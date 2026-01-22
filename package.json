@@ -6,7 +6,8 @@
         "dev-auto": "npm run build && npm run copy && npx tailwindcss -i resources/css/app.css -o resources/dist/filament-translatable.css --postcss --watch",
         "build": "npx tailwindcss -i resources/css/app.css -o resources/dist/filament-translatable.css --postcss --minify",
         "build-with-purge": "npx tailwindcss -i resources/css/app.css -o resources/dist/filament-translatable.css --postcss --minify && npm run purge",
-        "purge": "filament-purge -i resources/dist/filament-translatable.css -o resources/dist/filament-translatable.css -v 3.x"
+        "purge": "filament-purge -i resources/dist/filament-translatable.css -o resources/dist/filament-translatable.css -v 3.x",
+        "prettier": "npx prettier --log-level warn --write ."
     },
     "devDependencies": {
         "@awcodes/filament-plugin-purge": "^1.1.1",
@@ -17,6 +18,9 @@
         "postcss": "^8.4.26",
         "postcss-import": "^15.1.0",
         "postcss-nesting": "^13.0.2",
+        "prettier": "^3.7.4",
+        "prettier-plugin-blade": "^2.1.21",
+        "prettier-plugin-tailwindcss": "^0.7.2",
         "tailwindcss": "^4.1.11"
     },
     "dependencies": {

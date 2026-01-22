@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // Table for Spatie translatable - uses JSON column
-        Schema::create('spatie_posts', function (Blueprint $table) {
+        Schema::create('spatie_posts', function (Blueprint $table): void {
             $table->id();
             $table->string('author');
             $table->json('title')->nullable(); // Spatie stores translations in JSON
@@ -21,14 +21,14 @@ return new class extends Migration
         });
 
         // Table for Astrotomic translatable - main table
-        Schema::create('astrotomic_posts', function (Blueprint $table) {
+        Schema::create('astrotomic_posts', function (Blueprint $table): void {
             $table->id();
             $table->string('author');
             $table->timestamps();
         });
 
         // Translations table for Astrotomic translatable
-        Schema::create('astrotomic_post_translations', function (Blueprint $table) {
+        Schema::create('astrotomic_post_translations', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('astrotomic_post_id')->constrained()->onDelete('cascade');
             $table->string('locale')->index();
