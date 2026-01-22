@@ -11,6 +11,8 @@ parameters:
     paths:
         - src
 
+    reportUnmatchedIgnoredErrors: false
+
     tmpDir: build/phpstan
 
     checkOctaneCompatibility: true

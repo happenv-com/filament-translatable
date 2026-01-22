@@ -21,6 +21,7 @@ class Translations extends Tabs
     /**
      * @var view-string
      */
+    // @phpstan-ignore property.defaultValue
     protected string $view = 'filament-translatable::forms.components.translations';
 
     /**
