@@ -13,12 +13,12 @@ use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Webard\FilamentTranslatable\FilamentTranslatableServiceProvider;
 use Illuminate\Validation\ValidationServiceProvider;
 use Livewire\Livewire;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
+use Webard\FilamentTranslatable\FilamentTranslatableServiceProvider;
 
 class TestCase extends Orchestra
 {

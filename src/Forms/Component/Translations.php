@@ -8,12 +8,12 @@ use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
-use Webard\FilamentTranslatable\Enums\TranslationMode;
-use Webard\FilamentTranslatable\FilamentTranslatablePlugin;
-use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Webard\FilamentTranslatable\Enums\TranslationMode;
+use Webard\FilamentTranslatable\FilamentTranslatablePlugin;
+use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
 
 class Translations extends Tabs
 {

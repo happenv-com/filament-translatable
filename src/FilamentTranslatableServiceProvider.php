@@ -7,11 +7,11 @@ use Filament\Forms\Components\Field;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
-use Webard\FilamentTranslatable\Testing\TestsFilamentTranslateField;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Testing\TestsFilamentTranslateField;
 
 class FilamentTranslatableServiceProvider extends PackageServiceProvider
 {
