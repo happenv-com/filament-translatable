@@ -1,30 +1,36 @@
-name: run-tests
+name: "Run Tests"
 
 on:
   push:
-    branches: [v3]
+    branches: [main]
   pull_request:
-    branches: [v3]
+    branches: [main]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
-        php: [8.5, 8.4, 8.3]
-        laravel: [11.*,12.*]
+        os: [ubuntu-latest, windows-latest]
+        php: [8.5, 8.4, 8.3, 8.2]
+        laravel: [12.*, 11.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 10.*
-            testbench: 8.*
-            carbon: 2.*
+          - laravel: 12.*
+            testbench: 10.*
+            carbon: 3.*
+            collision: 8.*
+          - laravel: 11.*
+            testbench: 9.*
+            carbon: 3.*
+            collision: 8.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
