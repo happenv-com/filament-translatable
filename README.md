@@ -20,7 +20,11 @@
 - **Exclude fields from translation** — selectively exclude specific fields from the translation process
 - **Prefix/suffix locale labels** — optionally add locale indicators to field labels
 
-![translatable component](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component-light.png">
+  <img alt="translatable component" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component-light.png">
+</picture>
 
 ## Installation
 
@@ -168,7 +172,11 @@ TextInput::make('name')
     ->translatable()
 ```
 
-![translatable macro](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro-light.png">
+  <img alt="translatable macro" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro-light.png">
+</picture>
 
 #### Marking a field as required for a specific locale
 
@@ -223,7 +231,11 @@ TextInput::make('price')
     ->flagWidth('48px')
 ```
 
-![translatable custom macro](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2-light.png">
+  <img alt="translatable custom macro" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2-light.png">
+</picture>
 
 > [!CAUTION]
 > Be sure to set field-specific methods like `required()` or `requiredDefaultLocale()` **before** calling the `translatable()` method.
@@ -241,7 +253,11 @@ Translations::make('translations') // name is required to properly handle action
     ])
 ```
 
-![translatable horizontal component](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component-light.png">
+  <img alt="translatable horizontal component" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component-light.png">
+</picture>
 
 > [!NOTE]
 > Using the `translatable()` method within the `Translations` component is not needed.
