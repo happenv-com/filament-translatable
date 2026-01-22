@@ -5,9 +5,9 @@ namespace Webard\FilamentTranslatable\Tests\Forms\Fixtures;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Contracts\View\View;
 use Webard\FilamentTranslatable\Enums\TranslationMode;
 use Webard\FilamentTranslatable\Forms\Component\Translations;
-use Illuminate\Contracts\View\View;
 
 class TestComponentWithTranslate extends Livewire
 {

@@ -1,9 +1,9 @@
 <?php
 
-use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
-use Webard\FilamentTranslatable\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
+use Webard\FilamentTranslatable\Tests\TestCase;
 
 use function Pest\Livewire\livewire;
 
