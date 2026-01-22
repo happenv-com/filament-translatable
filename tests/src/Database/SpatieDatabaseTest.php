@@ -3,8 +3,6 @@
 use Webard\FilamentTranslatable\Tests\DatabaseTestCase;
 use Webard\FilamentTranslatable\Tests\Models\SpatiePost;
 
-use function Pest\Livewire\livewire;
-
 uses(DatabaseTestCase::class);
 
 it('can save translations to JSON column with Spatie package', function () {

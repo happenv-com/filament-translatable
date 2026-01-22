@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use Webard\FilamentTranslatable\Forms\Component\Translations;
 use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
 use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
-use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithVerticalTranslate;
 use Webard\FilamentTranslatable\Tests\TestCase;
 
 use function Pest\Livewire\livewire;
