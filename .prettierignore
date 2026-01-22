@@ -1,8 +1,9 @@
 CLAUDE.md
 boost.json
+.github/workflows/*
 .github/copilot-instructions.md
 .mcp.json
 .vscode/mcp.json
 .junie/guidelines.md
 CHANGELOG.md
-resources/dist
+resources/dist/*
