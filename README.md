@@ -6,7 +6,19 @@
 ![PHPStan](https://github.com/webard/filament-translatable/actions/workflows/phpstan.yml/badge.svg)
 ![Rector](https://github.com/webard/filament-translatable/actions/workflows/rector.yml/badge.svg)
 
-Filament Translatable is a set of tools that help manage translations.
+**Filament Translatable** is a flexible package that provides a complete solution for managing multilingual content in [Filament](https://filamentphp.com) admin panels. It allows you to easily create translatable form fields with an intuitive tabbed interface, supporting multiple locales and translation packages.
+
+## Key Features
+
+- **Multiple translation backends** — supports both [spatie/laravel-translatable](https://github.com/spatie/laravel-translatable) and [astrotomic/laravel-translatable](https://github.com/astrotomic/laravel-translatable)
+- **Two usage modes** — use the quick `translatable()` macro on any field, or the full `Translations` component for advanced scenarios
+- **Locale tabs with flags** — display translations in horizontal or vertical tabs with optional country flag icons
+- **Flexible locale configuration** — define locales globally or per-component, with custom labels
+- **Required locale validation** — mark fields as required for specific locales or only for the default locale
+- **Field decoration per locale** — customize field appearance (prefix, suffix, etc.) for each language
+- **Custom actions per tab** — add custom Filament actions to each locale tab with access to the current locale
+- **Exclude fields from translation** — selectively exclude specific fields from the translation process
+- **Prefix/suffix locale labels** — optionally add locale indicators to field labels
 
 ![translatable component](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component.png)
 
@@ -32,17 +44,17 @@ php artisan filament:assets
 
 ## Configuration
 
-## With `spatie/laravel-translatable`
+### With `spatie/laravel-translatable`
 
-The package from [Spatie](https://github.com/spatie/laravel-translatable) is the default supported way of handling translations. Follow the instructions in the [README](https://github.com/spatie/laravel-translatable/?tab=readme-ov-file#a-trait-to-make-eloquent-models-translatable) to properly configure your models.
+The [Spatie](https://github.com/spatie/laravel-translatable) package is the default translation backend. Follow the instructions in the [Spatie documentation](https://github.com/spatie/laravel-translatable/?tab=readme-ov-file#a-trait-to-make-eloquent-models-translatable) to properly configure your models.
 
-## With `astrotomic/laravel-translatable`
+### With `astrotomic/laravel-translatable`
 
-The package from [Astrotomic](https://github.com/astrotomic/laravel-translatable) is an alternative supported way of handling translations.
+The [Astrotomic](https://github.com/astrotomic/laravel-translatable) package is an alternative translation backend.
 
-Follow the [instructions](https://docs.astrotomic.info/laravel-translatable/installation#models) to properly configure your models, but instead of using the `Translatable` trait from the Astrotomic package, please use `Webard\FilamentTranslatable\Traits\AstrotomicTranslatable`.
+Follow the [Astrotomic documentation](https://docs.astrotomic.info/laravel-translatable/installation#models) to configure your models. However, instead of using the `Translatable` trait from the Astrotomic package, use `Webard\FilamentTranslatable\Traits\AstrotomicTranslatable`.
 
-If you use the Astrotomic package, please configure the plugin to work in Astrotomic mode:
+When using the Astrotomic package, configure the plugin to use Astrotomic mode:
 
 ```php
 use Webard\FilamentTranslatable\Enums\TranslationMode;
@@ -141,15 +153,13 @@ FilamentTranslatablePlugin::make()
     ->displayNamesInLocaleLabels(false)
 ```
 
-Otherwise, the config value `app.locale` will be used.
-
-This affects several methods that can be used on fields.
+Otherwise, the `app.fallback_locale` config value will be used.
 
 ## Usage
 
 ### `translatable()` macro
 
-By using the `translatable()` macro, you can quickly configure a single [form field](https://filamentphp.com/docs/4.x/forms/fields/getting-started) to support multiple languages and provide translations for each locale.
+The `translatable()` macro allows you to quickly convert any [form field](https://filamentphp.com/docs/4.x/forms/fields/getting-started) into a multilingual field that supports translations for each configured locale.
 
 ```php
 use Filament\Forms\Components\TextInput;
@@ -160,9 +170,9 @@ TextInput::make('name')
 
 ![translatable macro](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro.png)
 
-#### Marking field as required for specified locale
+#### Marking a field as required for a specific locale
 
-This way, the "name" field will only be required in the "en" language.
+You can make a field required only for specific locales. In this example, the "name" field will only be required for the English language:
 
 ```php
 use Filament\Forms\Components\TextInput;
@@ -172,9 +182,9 @@ TextInput::make('name')
     ->translatable()
 ```
 
-#### Marking field as required for default locale
+#### Marking a field as required for the default locale
 
-This way, the "name" field will only be required in the default language.
+You can make a field required only for the default locale. The default locale is determined by the `defaultLocale()` plugin setting or the `app.fallback_locale` config value:
 
 ```php
 use Filament\Forms\Components\TextInput;
@@ -184,16 +194,16 @@ TextInput::make('name')
     ->translatable()
 ```
 
-#### Decorating language specified fields
+#### Decorating language-specific fields
 
-You can fully customize language-specific fields using the `decorateTranslationField()` method.
+You can customize the appearance of fields for specific locales using the `decorateTranslationField()` method. This is useful for adding locale-specific prefixes, suffixes, or other modifications:
 
 ```php
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('price')
     ->decorateTranslationField('pl', fn (TextInput $field) => $field->suffix('PLN'))
-    ->decorateTranslationField('en', fn (TextInput $field) => $field->prefix('USD')),
+    ->decorateTranslationField('en', fn (TextInput $field) => $field->prefix('USD'))
     ->translatable()
 ```
 
@@ -220,7 +230,7 @@ TextInput::make('price')
 
 ### `Translations` component
 
-By using the `Translations` component, you can easily configure your [form fields](https://filamentphp.com/docs/4.x/forms/fields/getting-started) to support multiple languages and provide translations for each locale.
+The `Translations` component provides a more powerful way to configure multiple [form fields](https://filamentphp.com/docs/4.x/forms/fields/getting-started) for multilingual support. It displays translations in a tabbed interface, with each tab representing a different locale.
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
@@ -239,18 +249,18 @@ Translations::make('translations') // name is required to properly handle action
 > [!IMPORTANT]
 > Be sure to set different names for each `Translations` component when using multiple instances.
 
-#### Setting the translatable locales for a particular fields
+#### Setting the translatable locales for specific components
 
-By default, the translatable locales can be set globally for all translation form components in the plugin configuration. Alternatively, you can customize the translatable locales for a particular resource by overriding the `locales()` method in the `Translate` class:
+By default, locales are configured globally in the plugin settings. However, you can override the locales for a specific `Translations` component:
 
 ```php
 Translations::make('translations')
     ->locales(['en', 'es'])
 ```
 
-#### Setting the translatable label for a particular field
+#### Setting custom field labels per locale
 
-You have the flexibility to customize the translation label for each field in each locale. You can use the `fieldTranslatableLabel()` method to provide custom labels based on the field instance and the current locale.
+You can customize field labels for each locale using the `fieldTranslatableLabel()` method. This is useful for translating field labels themselves:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
@@ -262,9 +272,9 @@ use Webard\FilamentTranslatable\Forms\Component\Translations;
     ->fieldTranslatableLabel(fn ($field, $locale) => __($field->getName(), locale: $locale))
 ```
 
-#### Adding prefix/suffix locale label to the field
+#### Adding prefix/suffix locale labels to fields
 
-If you want to add a prefix or suffix locale label to the form field, you can use the `prefixLocaleLabel()` or `suffixLocaleLabel()` method. This makes it easier for users to identify the language associated with each field.
+You can add the locale name as a prefix or suffix to field labels using the `prefixLocaleLabel()` or `suffixLocaleLabel()` methods. This helps users identify which language they are editing:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
@@ -277,9 +287,9 @@ Translations::make('translations')
     ->suffixLocaleLabel()
 ```
 
-#### Setting the locale display name
+#### Customizing the locale label format
 
-By default, the prefix/suffix locale display name is generated from the locale code and enclosed in parentheses, "()". You may customize this using the `preformLocaleLabelUsing()` method:
+By default, the prefix/suffix locale label is generated from the locale code and enclosed in parentheses (e.g., "(English)"). You can customize this format using the `preformLocaleLabelUsing()` method:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
@@ -288,9 +298,9 @@ Translations::make('translations')
     ->preformLocaleLabelUsing(fn (string $locale, string $label) => "[{$label}]");
 ```
 
-#### Injecting the current form field
+#### Conditionally adding locale labels
 
-Additionally, if you need to access the current form field instance, you can inject the `$field` parameter into the callback functions. This allows you to perform specific actions or apply conditions based on the field being processed.
+You can conditionally add prefix/suffix labels by injecting the `$field` parameter into the callback. This allows you to apply locale labels only to specific fields:
 
 ```php
 use Filament\Forms\Components\Component;
@@ -299,19 +309,19 @@ use Webard\FilamentTranslatable\Forms\Component\Translations;
 Translations::make('translations')
     // ...
     ->prefixLocaleLabel(function(Component $field) {
-        // need return boolean value
+        // Must return a boolean value
         return $field->getName() == 'title';
     })
     ->suffixLocaleLabel(function(Component $field) {
-        // need return boolean value
+        // Must return a boolean value
         return $field->getName() == 'title';
     })
 
 ```
 
-#### Adding action
+#### Adding actions to locale tabs
 
-You may add actions before each container of child components using the `actions()` method:
+You can add custom Filament actions to each locale tab using the `actions()` method. Actions appear in the tab header and can be used for operations like auto-translation or copying content between locales:
 
 ```php
 
@@ -324,9 +334,9 @@ Translations::make('translations')
     ])
 ```
 
-#### Injecting the locale on current child container
+#### Accessing the locale in actions
 
-If you wish to access the locale that has been passed to the action, define an `$arguments` parameter and get the value of `locale` from `$arguments`:
+To access the current locale within an action, use the `$arguments` parameter and retrieve the `locale` value:
 
 ```php
 
@@ -343,9 +353,9 @@ Translations::make()
     ])
 ```
 
-#### Injecting the locale to form field
+#### Accessing the locale in schema
 
-If you wish to access the current locale instance for the field, define a `$locale` parameter:
+You can access the current locale within the schema definition by defining a `$locale` parameter. This is useful for conditional logic based on the locale:
 
 ```php
 
@@ -358,7 +368,7 @@ Translations::make()
 
 #### Removing the styled container
 
-By default, the translate component and its content are wrapped in a container styled as a card. You may remove the styled container using `contained()`:
+By default, the `Translations` component is wrapped in a card-styled container. You can remove this styling using the `contained()` method:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
@@ -378,9 +388,9 @@ Translations::make()
     ->vertical()
 ```
 
-#### Changing plugin settings
+#### Overriding plugin settings per component
 
-You can customize plugin settings directly on the component:
+You can override the global plugin settings directly on individual components:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
@@ -391,9 +401,9 @@ Translations::make()
     ->flagWidth('48px')
 ```
 
-#### Exclude
+#### Excluding fields from translation
 
-The `exclude` feature allows you to specify fields that you don't want to include in the translation process. This can be useful for fields that contain dynamic content or that shouldn't be translated into other languages.
+The `exclude()` method allows you to specify fields that should not be translated. Excluded fields will appear in the form but will not be duplicated for each locale. This is useful for fields that contain non-translatable content:
 
 ```php
 use Webard\FilamentTranslatable\Forms\Component\Translations;
