@@ -1,11 +1,11 @@
 # Filament Translatable
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/filamerce/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/filamerce/filament-translatable)
-[![Total Downloads](https://img.shields.io/packagist/dt/filamerce/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/filamerce/filament-translatable)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
+[![Total Downloads](https://img.shields.io/packagist/dt/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
 
 Filament Translatable is a set of tools that help manage translations.
 
-![translatable component](https://raw.githubusercontent.com/filamerce/filament-translatable/refs/heads/v3/screenshots/component.png)
+![translatable component](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component.png)
 
 ## Installation
 
@@ -19,7 +19,7 @@ Filament Translatable is a set of tools that help manage translations.
 You can install the package via composer:
 
 ```bash
-composer require filamerce/filament-translatable
+composer require webard/filament-translatable
 ```
 
 Publish the assets:
@@ -39,12 +39,12 @@ The package from [Spatie](https://github.com/spatie/laravel-translatable) is the
 
 The package from [Astrotomic](https://github.com/astrotomic/laravel-translatable) is an alternative supported way of handling translations.
 
-Follow the [instructions](https://docs.astrotomic.info/laravel-translatable/installation#models) to properly configure your models, but instead of using the `Translatable` trait from the Astrotomic package, please use `Filamerce\FilamentTranslatable\Traits\AstrotomicTranslatable`.
+Follow the [instructions](https://docs.astrotomic.info/laravel-translatable/installation#models) to properly configure your models, but instead of using the `Translatable` trait from the Astrotomic package, please use `Webard\FilamentTranslatable\Traits\AstrotomicTranslatable`.
 
 If you use the Astrotomic package, please configure the plugin to work in Astrotomic mode:
 
 ```php
-use Filamerce\FilamentTranslatable\Enums\TranslationMode;
+use Webard\FilamentTranslatable\Enums\TranslationMode;
 
 FilamentTranslatablePlugin::make()
     ->translationMode(TranslationMode::Astrotomic)
@@ -68,7 +68,7 @@ Or per field:
 ## Setup
 
 ```php
-use Filamerce\FilamentTranslatable\FilamentTranslatablePlugin;
+use Webard\FilamentTranslatable\FilamentTranslatablePlugin;
 
 public function panel(Panel $panel): Panel
 {
@@ -157,7 +157,7 @@ TextInput::make('name')
     ->translatable()
 ```
 
-![translatable macro](https://raw.githubusercontent.com/filamerce/filament-translatable/refs/heads/v3/screenshots/macro.png)
+![translatable macro](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro.png)
 
 #### Marking field as required for specified locale
 
@@ -212,7 +212,7 @@ TextInput::make('price')
     ->flagWidth('48px')
 ```
 
-![translatable custom macro](https://raw.githubusercontent.com/filamerce/filament-translatable/refs/heads/v3/screenshots/macro2.png)
+![translatable custom macro](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2.png)
 
 > [!CAUTION]
 > Be sure to set field-specific methods like `required()` or `requiredDefaultLocale()` **before** calling the `translatable()` method.
@@ -223,7 +223,7 @@ TextInput::make('price')
 By using the `Translations` component, you can easily configure your [form fields](https://filamentphp.com/docs/4.x/forms/fields/getting-started) to support multiple languages and provide translations for each locale.
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations') // name is required to properly handle actions
     ->schema([
@@ -231,7 +231,7 @@ Translations::make('translations') // name is required to properly handle action
     ])
 ```
 
-![translatable horizontal component](https://raw.githubusercontent.com/filamerce/filament-translatable/refs/heads/v3/screenshots/horizontal-component.png)
+![translatable horizontal component](https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component.png)
 
 > [!NOTE]
 > Using the `translatable()` method within the `Translations` component is not needed.
@@ -254,7 +254,7 @@ Translations::make('translations')
 You have the flexibility to customize the translation label for each field in each locale. You can use the `fieldTranslatableLabel()` method to provide custom labels based on the field instance and the current locale.
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
  Translations::make()
     ->schema([
@@ -268,7 +268,7 @@ use Filamerce\FilamentTranslatable\Forms\Component\Translations;
 If you want to add a prefix or suffix locale label to the form field, you can use the `prefixLocaleLabel()` or `suffixLocaleLabel()` method. This makes it easier for users to identify the language associated with each field.
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->schema([
@@ -283,7 +283,7 @@ Translations::make('translations')
 By default, the prefix/suffix locale display name is generated from the locale code and enclosed in parentheses, "()". You may customize this using the `preformLocaleLabelUsing()` method:
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->preformLocaleLabelUsing(fn (string $locale, string $label) => "[{$label}]");
@@ -295,7 +295,7 @@ Additionally, if you need to access the current form field instance, you can inj
 
 ```php
 use Filament\Forms\Components\Component;
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     // ...
@@ -317,7 +317,7 @@ You may add actions before each container of child components using the `actions
 ```php
 
 use Filament\Forms\Components\Actions\Action;
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->actions([
@@ -332,7 +332,7 @@ If you wish to access the locale that has been passed to the action, define an `
 ```php
 
 use Filament\Forms\Components\Actions\Action;
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->actions([
@@ -352,7 +352,7 @@ If you wish to access the current locale instance for the field, define a `$loca
 ```php
 
 use Filament\Forms\Components\TextInput;
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->schema(fn (string $locale) => [TextInput::make('title')->required($locale == 'en')])
@@ -362,7 +362,7 @@ Translations::make()
 By default, the translate component and its content are wrapped in a container styled as a card. You may remove the styled container using `contained()`:
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
  
 Translations::make()
     ->contained(false)
@@ -373,7 +373,7 @@ Translations::make()
 You can display translations as vertical tabs:
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
  
 Translations::make()
     ->vertical()
@@ -384,7 +384,7 @@ Translations::make()
 You can customize plugin settings directly on the component:
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
  
 Translations::make()
     ->displayNamesInLocaleLabels(false)
@@ -396,7 +396,7 @@ Translations::make()
 The `exclude` feature allows you to specify fields that you don't want to include in the translation process. This can be useful for fields that contain dynamic content or that shouldn't be translated into other languages.
 
 ```php
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
  
 Translations::make('translations')
     ->schema([
@@ -436,7 +436,7 @@ With `exclude`:
 To publish the views, run:
 
 ```bash
-php artisan vendor:publish --provider="Filamerce\\FilamentTranslatable\\FilamentTranslatableProvider" --tag="filament-translatable-views"
+php artisan vendor:publish --provider="Webard\\FilamentTranslatable\\FilamentTranslatableProvider" --tag="filament-translatable-views"
 ```
 
 ## Testing

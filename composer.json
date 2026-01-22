@@ -1,24 +1,25 @@
 {
-    "name": "filamerce/filament-translatable",
-    "description": "Highly customizable Translation component for FilamentPHP.",
+    "name": "webard/filament-translatable",
+    "description": "Highly customizable Translation component for Filament PHP.",
     "keywords": [
+        "php",
         "webard",
-        "filamerce",
         "laravel",
         "filament",
         "filamentphp",
         "translations",
         "locale",
+        "i18n",
         "laravel-translatable",
         "spatie-translatable",
         "astrotomic-translatable",
         "filament-translatable",
         "filament-translate-field"
     ],
-    "homepage": "https://github.com/filamerce/filament-translatable",
+    "homepage": "https://github.com/webard/filament-translatable",
     "support": {
-        "issues": "https://github.com/filamerce/filament-translatable/issues",
-        "source": "https://github.com/filamerce/filament-translatable"
+        "issues": "https://github.com/webard/filament-translatable/issues",
+        "source": "https://github.com/webard/filament-translatable"
     },
     "license": "MIT",
     "authors": [
@@ -47,13 +48,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Filamerce\\FilamentTranslatable\\": "src/",
-            "Filamerce\\FilamentTranslatable\\Database\\Factories\\": "database/factories/"
+            "Webard\\FilamentTranslatable\\": "src/",
+            "Webard\\FilamentTranslatable\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Filamerce\\FilamentTranslatable\\Tests\\": "tests/src"
+            "Webard\\FilamentTranslatable\\Tests\\": "tests/src"
         }
     },
     "scripts": {
@@ -73,7 +74,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Filamerce\\FilamentTranslatable\\FilamentTranslatableServiceProvider"
+                "Webard\\FilamentTranslatable\\FilamentTranslatableServiceProvider"
             ]
         }
     },

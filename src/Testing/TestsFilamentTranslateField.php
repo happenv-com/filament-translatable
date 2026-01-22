@@ -1,6 +1,6 @@
 <?php
 
-namespace Filamerce\FilamentTranslatable\Testing;
+namespace Webard\FilamentTranslatable\Testing;
 
 use Livewire\Features\SupportTesting\Testable;
 

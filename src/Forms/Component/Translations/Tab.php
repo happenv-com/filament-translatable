@@ -1,6 +1,6 @@
 <?php
 
-namespace Filamerce\FilamentTranslatable\Forms\Component\Translations;
+namespace Webard\FilamentTranslatable\Forms\Component\Translations;
 
 class Tab extends \Filament\Schemas\Components\Tabs\Tab
 {

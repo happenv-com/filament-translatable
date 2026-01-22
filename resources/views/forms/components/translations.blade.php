@@ -1,5 +1,5 @@
 @php
-    use Filamerce\FilamentTranslatable\Forms\Component\Translations\Tab;
+    use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
     $activeTab = $getActiveTab();
     $isContained = $isContained();
     $isVertical = $isVertical();

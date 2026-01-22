@@ -1,6 +1,6 @@
 <?php
 
-namespace Filamerce\FilamentTranslatable\Tests\Forms\Fixtures;
+namespace Webard\FilamentTranslatable\Tests\Forms\Fixtures;
 
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;

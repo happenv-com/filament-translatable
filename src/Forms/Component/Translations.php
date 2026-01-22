@@ -1,6 +1,6 @@
 <?php
 
-namespace Filamerce\FilamentTranslatable\Forms\Component;
+namespace Webard\FilamentTranslatable\Forms\Component;
 
 use Closure;
 use Filament\Actions\Action;
@@ -8,10 +8,10 @@ use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
-use Filamerce\FilamentTranslatable\Dto\Locale;
-use Filamerce\FilamentTranslatable\Enums\TranslationMode;
-use Filamerce\FilamentTranslatable\FilamentTranslatablePlugin;
-use Filamerce\FilamentTranslatable\Forms\Component\Translations\Tab;
+use Webard\FilamentTranslatable\Dto\Locale;
+use Webard\FilamentTranslatable\Enums\TranslationMode;
+use Webard\FilamentTranslatable\FilamentTranslatablePlugin;
+use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Filamerce\FilamentTranslatable\Traits;
+namespace Webard\FilamentTranslatable\Traits;
 
 use Astrotomic\Translatable\Translatable as OriginalTranslatable;
 

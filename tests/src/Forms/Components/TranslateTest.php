@@ -1,7 +1,7 @@
 <?php
 
-use Filamerce\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
-use Filamerce\FilamentTranslatable\Tests\TestCase;
+use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
+use Webard\FilamentTranslatable\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 

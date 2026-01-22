@@ -1,6 +1,6 @@
 <?php
 
-namespace Filamerce\FilamentTranslatable\Tests;
+namespace Webard\FilamentTranslatable\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
@@ -13,7 +13,7 @@ use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Filamerce\FilamentTranslatable\FilamentTranslatableServiceProvider;
+use Webard\FilamentTranslatable\FilamentTranslatableServiceProvider;
 use Illuminate\Validation\ValidationServiceProvider;
 use Livewire\Livewire;
 use Livewire\LivewireServiceProvider;
@@ -52,6 +52,6 @@ class TestCase extends Orchestra
             __DIR__ . '/../resources/views',
         ]);
 
-        // Livewire::component('dsf', \Filamerce\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate::class);
+        // Livewire::component('dsf', \Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate::class);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Filamerce\FilamentTranslatable\Dto;
+namespace Webard\FilamentTranslatable\Dto;
 
 final readonly class Locale
 {
