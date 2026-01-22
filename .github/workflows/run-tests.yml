@@ -22,7 +22,7 @@ jobs:
             carbon: 3.*
             collision: 8.*
           - laravel: 11.*
-            testbench: 9.*
+            testbench: 9.16.*
             carbon: 3.*
             collision: 8.*
 
