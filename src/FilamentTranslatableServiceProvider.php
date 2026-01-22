@@ -1,14 +1,14 @@
 <?php
 
-namespace Filamerce\FilamentTranslatable;
+namespace Webard\FilamentTranslatable;
 
 use Closure;
 use Filament\Forms\Components\Field;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
-use Filamerce\FilamentTranslatable\Forms\Component\Translations;
-use Filamerce\FilamentTranslatable\Testing\TestsFilamentTranslateField;
+use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Webard\FilamentTranslatable\Testing\TestsFilamentTranslateField;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -104,7 +104,7 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
 
     protected function getAssetPackageName(): ?string
     {
-        return 'filamerce/filament-translatable';
+        return 'webard/filament-translatable';
     }
 
     /**

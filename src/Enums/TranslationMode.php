@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Filamerce\FilamentTranslatable\Enums;
+namespace Webard\FilamentTranslatable\Enums;
 
 enum TranslationMode
 {

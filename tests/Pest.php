@@ -1,5 +1,5 @@
 <?php
 
-use Filamerce\FilamentTranslatable\Tests\TestCase;
+use Webard\FilamentTranslatable\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__ . 'src\\');
