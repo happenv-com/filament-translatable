@@ -1,11 +1,5 @@
 # Filament Translatable
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
-[![Total Downloads](https://img.shields.io/packagist/dt/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
-![Tests](https://github.com/webard/filament-translatable/actions/workflows/run-tests.yml/badge.svg)
-![PHPStan](https://github.com/webard/filament-translatable/actions/workflows/phpstan.yml/badge.svg)
-![Rector](https://github.com/webard/filament-translatable/actions/workflows/rector.yml/badge.svg)
-
 <p align="center" class="flex items-center justify-center">
     <a href="https://filamentphp.com/docs/3.x/introduction/overview">
         <img alt="FILAMENT 3.x" src="https://img.shields.io/badge/FILAMENT-3.x-EBB304?style=for-the-badge">
