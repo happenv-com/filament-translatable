@@ -1,10 +1,31 @@
 # Filament Translatable
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
-[![Total Downloads](https://img.shields.io/packagist/dt/webard/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/webard/filament-translatable)
-![Tests](https://github.com/webard/filament-translatable/actions/workflows/run-tests.yml/badge.svg)
-![PHPStan](https://github.com/webard/filament-translatable/actions/workflows/phpstan.yml/badge.svg)
-![Rector](https://github.com/webard/filament-translatable/actions/workflows/rector.yml/badge.svg)
+<p align="center" class="flex items-center justify-center">
+    <a href="https://filamentphp.com/docs/3.x/introduction/overview">
+        <img alt="FILAMENT 3.x" src="https://img.shields.io/badge/FILAMENT-3.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://filamentphp.com/docs/4.x/introduction/overview">
+        <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://filamentphp.com/docs/5.x/introduction/overview">
+        <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
+    </a>
+    <a href="https://packagist.org/packages/webard/filament-translatable">
+        <img alt="Packagist" src="https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=for-the-badge&logo=packagist">
+    </a>
+    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arun-tests+branch%3Av3" class="filament-hidden">
+        <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/run-tests.yml?style=for-the-badge&logo=github&label=tests">
+    </a>
+    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Aphpstan+branch%3Av3" class="filament-hidden">
+        <img alt="PHPStan Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/phpstan.yml?style=for-the-badge&logo=github&label=phpstan">
+    </a>
+    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arector+branch%3Av3" class="filament-hidden">
+        <img alt="Rector Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/rector.yml?style=for-the-badge&logo=github&label=rector">
+    </a>
+    <a href="https://packagist.org/packages/webard/filament-translatable">
+        <img alt="Downloads" src="https://img.shields.io/packagist/dt/webard/filament-translatable.svg?style=for-the-badge" >
+    </a>
+</p>
 
 **Filament Translatable** is a flexible package that provides a complete solution for managing multilingual content in [Filament](https://filamentphp.com) admin panels. It allows you to easily create translatable form fields with an intuitive tabbed interface, supporting multiple locales and translation packages.
 
