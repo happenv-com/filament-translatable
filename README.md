@@ -13,13 +13,13 @@
     <a href="https://packagist.org/packages/webard/filament-translatable">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=for-the-badge&logo=packagist">
     </a>
-    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arun-tests+branch%3Amain" class="filament-hidden">
+    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arun-tests+branch%3Av3" class="filament-hidden">
         <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/run-tests.yml?style=for-the-badge&logo=github&label=tests">
     </a>
-    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Aphpstan+branch%3Amain" class="filament-hidden">
+    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Aphpstan+branch%3Av3" class="filament-hidden">
         <img alt="PHPStan Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/phpstan.yml?style=for-the-badge&logo=github&label=phpstan">
     </a>
-    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arector+branch%3Amain" class="filament-hidden">
+    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arector+branch%3Av3" class="filament-hidden">
         <img alt="Rector Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/rector.yml?style=for-the-badge&logo=github&label=rector">
     </a>
     <a href="https://packagist.org/packages/webard/filament-translatable">
