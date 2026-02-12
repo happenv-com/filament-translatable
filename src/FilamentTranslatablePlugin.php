@@ -115,7 +115,7 @@ class FilamentTranslatablePlugin implements Plugin
     /**
      * @return array<string>
      */
-    public function getLocales(): array | null
+    public function getLocales(): ?array
     {
         return $this->evaluate($this->locales);
     }
