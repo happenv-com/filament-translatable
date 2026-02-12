@@ -115,9 +115,9 @@ class FilamentTranslatablePlugin implements Plugin
     /**
      * @return array<string>
      */
-    public function getLocales(): Closure | array | null
+    public function getLocales(): array | null
     {
-        return $this->locales;
+        return $this->evaluate($this->locales);
     }
 
     public function defaultLocale(string | Closure $locale): static
@@ -127,8 +127,8 @@ class FilamentTranslatablePlugin implements Plugin
         return $this;
     }
 
-    public function getDefaultLocale(): string | Closure
+    public function getDefaultLocale(): string
     {
-        return $this->defaultLocale ?? config('app.fallback_locale', 'en');
+        return $this->evaluate($this->defaultLocale) ?? config('app.fallback_locale', 'en');
     }
 }
