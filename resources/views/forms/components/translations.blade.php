@@ -13,7 +13,7 @@
     $hasActions = filled($actions);
 
     $childComponentsWithLocale = collect($getChildComponentContainers())->map(fn ($container) => $container->getComponents());
-    $tabs = collect($childComponentsWithLocale)->map(fn ($components) => Arr::first($components, fn ($component) => $component instanceof Tab));
+    $tabs = collect($childComponentsWithLocale)->map(fn ($components) => \Illuminate\Support\Arr::first($components, fn ($component) => $component instanceof Tab));
 
     $tabCount = $tabs->count();
 @endphp
