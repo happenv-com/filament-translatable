@@ -67,7 +67,7 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
              * @var Field $this
              */
             // @phpstan-ignore property.notFound, varTag.nativeType
-            $this->translationFieldDecorators[$locale][] = function (Field $field) use ($condition): \Filament\Forms\Components\Field {
+            $this->translationFieldDecorators[$locale][] = function (Field $field) use ($condition): Field {
                 $field->required($condition);
 
                 return $field;
@@ -107,7 +107,7 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
                     $field,
                 ]);
 
-            if ($translationFieldDecorator instanceof \Closure) {
+            if ($translationFieldDecorator instanceof Closure) {
                 return $translationFieldDecorator($tabsField);
             }
 

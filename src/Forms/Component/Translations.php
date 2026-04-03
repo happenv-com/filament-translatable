@@ -293,7 +293,7 @@ class Translations extends Tabs
 
                         ->schema(
                             (new Collection($this->getChildComponentsByLocale($locale->code)['default']))
-                                ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $component): \Illuminate\Contracts\Support\Htmlable | string => $this->prepareTranslateLocaleComponent($component, $locale))
+                                ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $component): Htmlable | string => $this->prepareTranslateLocaleComponent($component, $locale))
                                 ->all()
                         ),
                 ])
@@ -335,7 +335,7 @@ class Translations extends Tabs
                 $localeComponent->label($this->getFieldTranslatableLabel($component, $locale) ?? $component->getLabel());
 
                 $localeLabel = $this->getLocaleLabel($locale, false);
-                $performedLocaleLabel = $this->preformLocaleLabelUsing instanceof \Closure
+                $performedLocaleLabel = $this->preformLocaleLabelUsing instanceof Closure
                     ? $this->evaluate($this->preformLocaleLabelUsing, [
                         'locale' => $locale,
                         'label' => $localeLabel,
@@ -388,7 +388,7 @@ class Translations extends Tabs
 
                 $localeComponent->schema(
                     collect($childComponents)
-                        ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $childComponent): \Illuminate\Contracts\Support\Htmlable | string => $this->prepareTranslateLocaleComponent($childComponent, $locale))
+                        ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $childComponent): Htmlable | string => $this->prepareTranslateLocaleComponent($childComponent, $locale))
                         ->all()
                 );
             }
