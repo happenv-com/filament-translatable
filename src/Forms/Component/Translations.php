@@ -275,6 +275,7 @@ class Translations extends Tabs
     /**
      * @return array<Schema>
      */
+    #[\Override]
     public function getChildSchemas(bool $withHidden = false): array
     {
         $containers = [];

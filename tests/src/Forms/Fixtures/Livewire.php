@@ -21,6 +21,7 @@ class Livewire extends Component implements HasActions, HasSchemas
         return new static;
     }
 
+    #[\Override]
     public function getErrorBag()
     {
         return new MessageBag;

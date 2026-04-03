@@ -19,6 +19,7 @@ class Tab extends \Filament\Schemas\Components\Tabs\Tab
         return $this;
     }
 
+    #[\Override]
     public function getKey(bool $isAbsolute = true): ?string
     {
         return parent::getKey() ?? (count($this->getActions()) > 0 ? $this->getId() : null);
