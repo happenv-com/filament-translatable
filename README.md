@@ -38,7 +38,7 @@
 - **Required locale validation** — mark fields as required for specific locales or only for the default locale
 - **Field decoration per locale** — customize field appearance (prefix, suffix, etc.) for each language
 - **Custom actions per tab** — add custom Filament actions to each locale tab with access to the current locale
-- **Exclude fields from translation** — selectively exclude specific fields from the translation process
+- **Include or exclude fields from translation** — selectively control which fields are translated
 - **Prefix/suffix locale labels** — optionally add locale indicators to field labels
 
 <picture>
@@ -471,6 +471,51 @@ Without `exclude`:
 ```
 
 With `exclude`:
+
+```json
+{
+    "title": {
+        "en": "Dump",
+        "es": "Dump",
+        "fr": "Dump"
+    },
+    "description": null
+}
+```
+
+#### Including only specific fields for translation
+
+The `include()` method allows you to specify which fields should be translated. This is useful when only a small subset of fields in a large form requires translations.
+
+```php
+use Webard\FilamentTranslatable\Forms\Component\Translations;
+
+Translations::make('translations')
+    ->schema([
+        Forms\Components\TextInput::make('title'),
+        Forms\Components\TextInput::make('description'),
+    ])
+    ->include(['title'])
+```
+
+Without `include`:
+
+```json
+{
+    "title": {
+        "en": "Dump",
+        "es": "Dump",
+        "fr": "Dump"
+    },
+    "description": {
+        "en": null,
+        "es": null,
+        "fr": null
+    }
+}
+```
+
+With `include(['title'])`:
 
 ```json
 {

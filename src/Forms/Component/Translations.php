@@ -34,6 +34,11 @@ class Translations extends Tabs
     /**
      * @var null|Closure|array<string>|Collection<int,string>
      */
+    protected null | Closure | array | Collection $include = null;
+
+    /**
+     * @var null|Closure|array<string>|Collection<int,string>
+     */
     protected null | Closure | array | Collection $exclude = [];
 
     /**
@@ -64,6 +69,16 @@ class Translations extends Tabs
     protected bool | Closure | null $displayNamesInLocaleLabels = null;
 
     protected Closure | TranslationMode | null $translationMode = null;
+
+    /**
+     * @param  Closure|array<string>|Collection<int,string>  $include
+     */
+    public function include(Closure | array | Collection $include): static
+    {
+        $this->include = $include;
+
+        return $this;
+    }
 
     /**
      * @param  Closure|array<string>|Collection<int,string>  $exclude
@@ -317,7 +332,27 @@ class Translations extends Tabs
 
             $localeComponentName = $localeComponent->getName();
 
-            if (filled($localeComponentName) && is_string($localeComponentName) && ! in_array($localeComponentName, $this->exclude)) {
+            if (filled($localeComponentName) && is_string($localeComponentName)) {
+
+                $include = $this->evaluate($this->include);
+
+                if ($include instanceof Collection) {
+                    $include = $include->all();
+                }
+
+                if ($include !== null && ! in_array($localeComponentName, $include, true)) {
+                    return $localeComponent;
+                }
+
+                $exclude = $this->evaluate($this->exclude);
+
+                if ($exclude instanceof Collection) {
+                    $exclude = $exclude->all();
+                }
+
+                if (in_array($localeComponentName, $exclude, true)) {
+                    return $localeComponent;
+                }
 
                 // this is macro
                 // @phpstan-ignore method.notFound
