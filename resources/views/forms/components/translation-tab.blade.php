@@ -35,7 +35,7 @@
                     'tabindex' => '0',
                     'wire:key' =>
                         "{$this->getId()}.{$getStatePath()}." .
-                        \ Happenv\FilamentTranslatable\Forms\Component\Translations::class .
+                        \Happenv\FilamentTranslatable\Forms\Component\Translations::class .
                         ".tabs.{$id}",
                 ],
                 escape: false,

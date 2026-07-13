@@ -52,6 +52,6 @@ class TestCase extends Orchestra
             __DIR__ . '/../resources/views',
         ]);
 
-        // Livewire::component('dsf', \ Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate::class);
+        // Livewire::component('dsf', \Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate::class);
     }
 }
