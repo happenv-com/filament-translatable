@@ -1,12 +1,12 @@
 <?php
 
-namespace Webard\FilamentTranslatable;
+namespace  Happenv\FilamentTranslatable;
 
 use Closure;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Webard\FilamentTranslatable\Enums\TranslationMode;
+use Happenv\FilamentTranslatable\Enums\TranslationMode;
 
 class FilamentTranslatablePlugin implements Plugin
 {

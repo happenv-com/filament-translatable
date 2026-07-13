@@ -1,6 +1,6 @@
 <?php
 
-namespace Webard\FilamentTranslatable\Tests;
+namespace  Happenv\FilamentTranslatable\Tests;
 
 use Astrotomic\Translatable\TranslatableServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;

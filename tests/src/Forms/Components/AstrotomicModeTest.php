@@ -1,8 +1,8 @@
 <?php
 
-use Webard\FilamentTranslatable\Enums\TranslationMode;
-use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithAstrotomic;
-use Webard\FilamentTranslatable\Tests\TestCase;
+use Happenv\FilamentTranslatable\Enums\TranslationMode;
+use Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithAstrotomic;
+use Happenv\FilamentTranslatable\Tests\TestCase;
 
 use function Pest\Livewire\livewire;
 

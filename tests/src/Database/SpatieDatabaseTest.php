@@ -1,7 +1,7 @@
 <?php
 
-use Webard\FilamentTranslatable\Tests\DatabaseTestCase;
-use Webard\FilamentTranslatable\Tests\Models\SpatiePost;
+use Happenv\FilamentTranslatable\Tests\DatabaseTestCase;
+use Happenv\FilamentTranslatable\Tests\Models\SpatiePost;
 
 uses(DatabaseTestCase::class);
 

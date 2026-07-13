@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use Webard\FilamentTranslatable\Tests\DatabaseTestCase;
-use Webard\FilamentTranslatable\Tests\Models\AstrotomicPost;
+use Happenv\FilamentTranslatable\Tests\DatabaseTestCase;
+use Happenv\FilamentTranslatable\Tests\Models\AstrotomicPost;
 
 uses(DatabaseTestCase::class);
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Webard\FilamentTranslatable\Tests\Models;
+namespace  Happenv\FilamentTranslatable\Tests\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Illuminate\Database\Eloquent\Model;
-use Webard\FilamentTranslatable\Traits\AstrotomicTranslatable;
+use Happenv\FilamentTranslatable\Traits\AstrotomicTranslatable;
 
 /**
  * Astrotomic translatable model - stores translations in a separate table

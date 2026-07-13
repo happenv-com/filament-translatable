@@ -1,6 +1,6 @@
 <?php
 
-namespace Webard\FilamentTranslatable\Forms\Component;
+namespace  Happenv\FilamentTranslatable\Forms\Component;
 
 use Closure;
 use Filament\Actions\Action;
@@ -11,10 +11,10 @@ use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
-use Webard\FilamentTranslatable\Dto\Locale;
-use Webard\FilamentTranslatable\Enums\TranslationMode;
-use Webard\FilamentTranslatable\FilamentTranslatablePlugin;
-use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
+use Happenv\FilamentTranslatable\Dto\Locale;
+use Happenv\FilamentTranslatable\Enums\TranslationMode;
+use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
+use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
 
 class Translations extends Tabs
 {

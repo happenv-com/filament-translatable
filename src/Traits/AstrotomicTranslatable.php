@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Webard\FilamentTranslatable\Traits;
+namespace  Happenv\FilamentTranslatable\Traits;
 
 use Astrotomic\Translatable\Translatable as OriginalTranslatable;
 

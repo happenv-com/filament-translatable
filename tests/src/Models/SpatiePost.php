@@ -1,6 +1,6 @@
 <?php
 
-namespace Webard\FilamentTranslatable\Tests\Models;
+namespace  Happenv\FilamentTranslatable\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;

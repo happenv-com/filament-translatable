@@ -10,20 +10,20 @@
     <a href="https://filamentphp.com/docs/5.x/introduction/overview">
         <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
     </a>
-    <a href="https://packagist.org/packages/webard/filament-translatable">
-        <img alt="Packagist" src="https://img.shields.io/packagist/v/webard/filament-translatable.svg?style=for-the-badge&logo=packagist">
+    <a href="https://packagist.org/packages/happenv-com/filament-translatable">
+        <img alt="Packagist" src="https://img.shields.io/packagist/v/happenv-com/filament-translatable.svg?style=for-the-badge&logo=packagist">
     </a>
-    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arun-tests+branch%3Av3" class="filament-hidden">
-        <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/run-tests.yml?style=for-the-badge&logo=github&label=tests">
+    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arun-tests+branch%3Av3" class="filament-hidden">
+        <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/run-tests.yml?style=for-the-badge&logo=github&label=tests">
     </a>
-    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Aphpstan+branch%3Av3" class="filament-hidden">
-        <img alt="PHPStan Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/phpstan.yml?style=for-the-badge&logo=github&label=phpstan">
+    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Aphpstan+branch%3Av3" class="filament-hidden">
+        <img alt="PHPStan Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/phpstan.yml?style=for-the-badge&logo=github&label=phpstan">
     </a>
-    <a href="https://github.com/webard/filament-translatable/actions?query=workflow%3Arector+branch%3Av3" class="filament-hidden">
-        <img alt="Rector Passing" src="https://img.shields.io/github/actions/workflow/status/webard/filament-translatable/rector.yml?style=for-the-badge&logo=github&label=rector">
+    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arector+branch%3Av3" class="filament-hidden">
+        <img alt="Rector Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/rector.yml?style=for-the-badge&logo=github&label=rector">
     </a>
-    <a href="https://packagist.org/packages/webard/filament-translatable">
-        <img alt="Downloads" src="https://img.shields.io/packagist/dt/webard/filament-translatable.svg?style=for-the-badge" >
+    <a href="https://packagist.org/packages/happenv-com/filament-translatable">
+        <img alt="Downloads" src="https://img.shields.io/packagist/dt/happenv-com/filament-translatable.svg?style=for-the-badge" >
     </a>
 </p>
 
@@ -42,9 +42,9 @@
 - **Prefix/suffix locale labels** — optionally add locale indicators to field labels
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component-light.png">
-  <img alt="translatable component" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/component-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/component-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/component-light.png">
+  <img alt="translatable component" src="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/component-light.png">
 </picture>
 
 ## Installation
@@ -58,7 +58,7 @@
 You can install the package via composer:
 
 ```bash
-composer require webard/filament-translatable
+composer require happenv-com/filament-translatable
 ```
 
 Publish the assets:
@@ -77,12 +77,12 @@ The [Spatie](https://github.com/spatie/laravel-translatable) package is the defa
 
 The [Astrotomic](https://github.com/astrotomic/laravel-translatable) package is an alternative translation backend.
 
-Follow the [Astrotomic documentation](https://docs.astrotomic.info/laravel-translatable/installation#models) to configure your models. However, instead of using the `Translatable` trait from the Astrotomic package, use `Webard\FilamentTranslatable\Traits\AstrotomicTranslatable`.
+Follow the [Astrotomic documentation](https://docs.astrotomic.info/laravel-translatable/installation#models) to configure your models. However, instead of using the `Translatable` trait from the Astrotomic package, use ` Happenv\FilamentTranslatable\Traits\AstrotomicTranslatable`.
 
 When using the Astrotomic package, configure the plugin to use Astrotomic mode:
 
 ```php
-use Webard\FilamentTranslatable\Enums\TranslationMode;
+use Happenv\FilamentTranslatable\Enums\TranslationMode;
 
 FilamentTranslatablePlugin::make()
     ->translationMode(TranslationMode::Astrotomic)
@@ -106,7 +106,7 @@ Or per field:
 ## Setup
 
 ```php
-use Webard\FilamentTranslatable\FilamentTranslatablePlugin;
+use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
 
 public function panel(Panel $panel): Panel
 {
@@ -194,9 +194,9 @@ TextInput::make('name')
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro-light.png">
-  <img alt="translatable macro" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/macro-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/macro-light.png">
+  <img alt="translatable macro" src="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/macro-light.png">
 </picture>
 
 #### Marking a field as required for a specific locale
@@ -253,9 +253,9 @@ TextInput::make('price')
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2-light.png">
-  <img alt="translatable custom macro" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/macro2-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/macro2-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/macro2-light.png">
+  <img alt="translatable custom macro" src="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/macro2-light.png">
 </picture>
 
 > [!CAUTION]
@@ -266,7 +266,7 @@ TextInput::make('price')
 The `Translations` component provides a more powerful way to configure multiple [form fields](https://filamentphp.com/docs/4.x/forms/fields/getting-started) for multilingual support. It displays translations in a tabbed interface, with each tab representing a different locale.
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations') // name is required to properly handle actions
     ->schema([
@@ -275,9 +275,9 @@ Translations::make('translations') // name is required to properly handle action
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component-light.png">
-  <img alt="translatable horizontal component" src="https://raw.githubusercontent.com/webard/filament-translatable/refs/heads/v3/screenshots/horizontal-component-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/horizontal-component-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/horizontal-component-light.png">
+  <img alt="translatable horizontal component" src="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/horizontal-component-light.png">
 </picture>
 
 > [!NOTE]
@@ -300,7 +300,7 @@ Translations::make('translations')
 You can customize field labels for each locale using the `fieldTranslatableLabel()` method. This is useful for translating field labels themselves:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
  Translations::make()
     ->schema([
@@ -314,7 +314,7 @@ use Webard\FilamentTranslatable\Forms\Component\Translations;
 You can add the locale name as a prefix or suffix to field labels using the `prefixLocaleLabel()` or `suffixLocaleLabel()` methods. This helps users identify which language they are editing:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->schema([
@@ -329,7 +329,7 @@ Translations::make('translations')
 By default, the prefix/suffix locale label is generated from the locale code and enclosed in parentheses (e.g., "(English)"). You can customize this format using the `preformLocaleLabelUsing()` method:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->preformLocaleLabelUsing(fn (string $locale, string $label) => "[{$label}]");
@@ -341,7 +341,7 @@ You can conditionally add prefix/suffix labels by injecting the `$field` paramet
 
 ```php
 use Filament\Forms\Components\Component;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     // ...
@@ -363,7 +363,7 @@ You can add custom Filament actions to each locale tab using the `actions()` met
 ```php
 
 use Filament\Forms\Components\Actions\Action;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->actions([
@@ -378,7 +378,7 @@ To access the current locale within an action, use the `$arguments` parameter an
 ```php
 
 use Filament\Forms\Components\Actions\Action;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->actions([
@@ -397,7 +397,7 @@ You can access the current locale within the schema definition by defining a `$l
 ```php
 
 use Filament\Forms\Components\TextInput;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->schema(fn (string $locale) => [TextInput::make('title')->required($locale == 'en')])
@@ -408,7 +408,7 @@ Translations::make()
 By default, the `Translations` component is wrapped in a card-styled container. You can remove this styling using the `contained()` method:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->contained(false)
@@ -419,7 +419,7 @@ Translations::make()
 You can display translations as vertical tabs:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->vertical()
@@ -430,7 +430,7 @@ Translations::make()
 You can override the global plugin settings directly on individual components:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make()
     ->displayNamesInLocaleLabels(false)
@@ -443,7 +443,7 @@ Translations::make()
 The `exclude()` method allows you to specify fields that should not be translated. Excluded fields will appear in the form but will not be duplicated for each locale. This is useful for fields that contain non-translatable content:
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->schema([
@@ -488,7 +488,7 @@ With `exclude`:
 The `include()` method allows you to specify which fields should be translated. This is useful when only a small subset of fields in a large form requires translations.
 
 ```php
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     ->schema([
@@ -533,7 +533,7 @@ With `include(['title'])`:
 To publish the views, run:
 
 ```bash
-php artisan vendor:publish --provider="Webard\\FilamentTranslatable\\FilamentTranslatableProvider" --tag="filament-translatable-views"
+php artisan vendor:publish --provider=" Happenv\\FilamentTranslatable\\FilamentTranslatableProvider" --tag="filament-translatable-views"
 ```
 
 ## Testing
@@ -552,7 +552,7 @@ See [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
-If you discover any security-related issues, please email code@webard.me instead of using the issue tracker.
+If you discover any security-related issues, please email code@happenv.com instead of using the issue tracker.
 
 ## Credits
 

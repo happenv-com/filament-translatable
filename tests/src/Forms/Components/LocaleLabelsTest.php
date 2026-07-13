@@ -1,7 +1,7 @@
 <?php
 
-use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithLocaleLabels;
-use Webard\FilamentTranslatable\Tests\TestCase;
+use Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithLocaleLabels;
+use Happenv\FilamentTranslatable\Tests\TestCase;
 
 use function Pest\Livewire\livewire;
 

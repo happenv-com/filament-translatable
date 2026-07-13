@@ -1,5 +1,5 @@
 @php
-    use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
+    use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
     $activeTab = $getActiveTab();
     $isContained = $isContained();
     $isVertical = $isVertical();

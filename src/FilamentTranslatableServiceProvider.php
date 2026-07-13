@@ -1,6 +1,6 @@
 <?php
 
-namespace Webard\FilamentTranslatable;
+namespace  Happenv\FilamentTranslatable;
 
 use Closure;
 use Filament\Forms\Components\Field;
@@ -9,7 +9,7 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 class FilamentTranslatableServiceProvider extends PackageServiceProvider
 {
@@ -117,7 +117,7 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
 
     protected function getAssetPackageName(): ?string
     {
-        return 'webard/filament-translatable';
+        return 'happenv-com/filament-translatable';
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-use Webard\FilamentTranslatable\Forms\Component\Translations;
-use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithVerticalTranslate;
-use Webard\FilamentTranslatable\Tests\TestCase;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithVerticalTranslate;
+use Happenv\FilamentTranslatable\Tests\TestCase;
 
 use function Pest\Livewire\livewire;
 

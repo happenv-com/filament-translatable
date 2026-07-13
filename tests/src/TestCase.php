@@ -1,6 +1,6 @@
 <?php
 
-namespace Webard\FilamentTranslatable\Tests;
+namespace  Happenv\FilamentTranslatable\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
@@ -18,7 +18,7 @@ use Livewire\Livewire;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
-use Webard\FilamentTranslatable\FilamentTranslatableServiceProvider;
+use Happenv\FilamentTranslatable\FilamentTranslatableServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -52,6 +52,6 @@ class TestCase extends Orchestra
             __DIR__ . '/../resources/views',
         ]);
 
-        // Livewire::component('dsf', \Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate::class);
+        // Livewire::component('dsf', \ Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate::class);
     }
 }

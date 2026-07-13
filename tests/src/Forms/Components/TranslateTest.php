@@ -3,10 +3,10 @@
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Webard\FilamentTranslatable\Forms\Component\Translations;
-use Webard\FilamentTranslatable\Forms\Component\Translations\Tab;
-use Webard\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
-use Webard\FilamentTranslatable\Tests\TestCase;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
+use Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
+use Happenv\FilamentTranslatable\Tests\TestCase;
 
 use function Pest\Livewire\livewire;
 
