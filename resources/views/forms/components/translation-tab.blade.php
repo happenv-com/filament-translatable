@@ -26,7 +26,8 @@
         @js($inactiveTabClasses): tab !== @js($id),
     }"
     x-on:expand="tab = @js($id)"
-    {{ $attributes
+    {{
+        $attributes
             ->merge(
                 [
                     'aria-labelledby' => $id,
@@ -41,7 +42,8 @@
                 escape: false,
             )
             ->merge($getExtraAttributes(), escape: false)
-            ->class(['fi-sc-tabs-tab']) }}
+            ->class(['fi-sc-tabs-tab'])
+    }}
 >
     <div>
         {{ $getChildComponentContainer() }}
