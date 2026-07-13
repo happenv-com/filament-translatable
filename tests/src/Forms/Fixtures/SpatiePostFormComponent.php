@@ -1,14 +1,14 @@
 <?php
 
-namespace  Happenv\FilamentTranslatable\Tests\Forms\Fixtures;
+namespace Happenv\FilamentTranslatable\Tests\Forms\Fixtures;
 
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
-use Illuminate\Contracts\View\View;
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 use Happenv\FilamentTranslatable\Tests\Models\SpatiePost;
+use Illuminate\Contracts\View\View;
 
 class SpatiePostFormComponent extends Livewire
 {

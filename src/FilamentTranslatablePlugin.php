@@ -1,6 +1,6 @@
 <?php
 
-namespace  Happenv\FilamentTranslatable;
+namespace Happenv\FilamentTranslatable;
 
 use Closure;
 use Filament\Contracts\Plugin;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Happenv\FilamentTranslatable\Enums;
+namespace Happenv\FilamentTranslatable\Enums;
 
 enum TranslationMode
 {

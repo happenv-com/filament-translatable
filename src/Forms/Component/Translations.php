@@ -1,6 +1,6 @@
 <?php
 
-namespace  Happenv\FilamentTranslatable\Forms\Component;
+namespace Happenv\FilamentTranslatable\Forms\Component;
 
 use Closure;
 use Filament\Actions\Action;
@@ -8,13 +8,13 @@ use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Collection;
-use Illuminate\Support\HtmlString;
 use Happenv\FilamentTranslatable\Dto\Locale;
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
 use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 
 class Translations extends Tabs
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace  Happenv\FilamentTranslatable;
+namespace Happenv\FilamentTranslatable;
 
 use Closure;
 use Filament\Forms\Components\Field;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 class FilamentTranslatableServiceProvider extends PackageServiceProvider
 {

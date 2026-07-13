@@ -1,6 +1,6 @@
 <?php
 
-namespace  Happenv\FilamentTranslatable\Tests;
+namespace Happenv\FilamentTranslatable\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
@@ -13,12 +13,12 @@ use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
+use Happenv\FilamentTranslatable\FilamentTranslatableServiceProvider;
 use Illuminate\Validation\ValidationServiceProvider;
 use Livewire\Livewire;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
-use Happenv\FilamentTranslatable\FilamentTranslatableServiceProvider;
 
 class TestCase extends Orchestra
 {

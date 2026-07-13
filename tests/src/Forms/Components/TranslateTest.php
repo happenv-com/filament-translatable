@@ -1,12 +1,12 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
 use Happenv\FilamentTranslatable\Tests\Forms\Fixtures\TestComponentWithTranslate;
 use Happenv\FilamentTranslatable\Tests\TestCase;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 use function Pest\Livewire\livewire;
 

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Happenv\FilamentTranslatable\Tests\DatabaseTestCase;
 use Happenv\FilamentTranslatable\Tests\Models\AstrotomicPost;
+use Illuminate\Support\Facades\DB;
 
 uses(DatabaseTestCase::class);
 

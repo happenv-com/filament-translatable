@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Happenv\FilamentTranslatable\Dto;
+namespace Happenv\FilamentTranslatable\Dto;
 
 final readonly class Locale
 {
