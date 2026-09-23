@@ -6,6 +6,7 @@
     colors="true"
     executionOrder="random"
     failOnWarning="true"
+    failOnDeprecation="true"
     failOnRisky="true"
     failOnEmptyTestSuite="true"
     beStrictAboutOutputDuringTests="true"
@@ -19,7 +20,7 @@
             <directory>./tests/Feature</directory>
         </testsuite>
     </testsuites>
-    <source>
+    <source ignoreIndirectDeprecations="true">
         <include>
             <directory suffix=".php">./src</directory>
         </include>

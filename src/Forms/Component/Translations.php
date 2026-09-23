@@ -13,6 +13,7 @@ use Happenv\FilamentTranslatable\Dto\Locale;
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
 use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
+use Happenv\FilamentTranslatable\Support\FieldTranslationSettings;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -296,19 +297,27 @@ class Translations extends Tabs
 
         $field->flushCachedAbsoluteStatePath();
 
-        // replaced in Task 5
-        // @phpstan-ignore method.notFound
-        $field->defaultLocale($this->getDefaultLocale());
+        FieldTranslationSettings::markTranslated($field, $attribute, $locale->code);
 
-        // @phpstan-ignore property.notFound
-        if ($field->requiredDefaultLocale ?? false) {
-            // @phpstan-ignore method.notFound
-            $field->requiredLocale($this->getDefaultLocale());
+        $requiredLocales = FieldTranslationSettings::getRequiredLocales($field);
+        $requiredDefaultLocale = FieldTranslationSettings::getRequiredDefaultLocale($field);
+
+        if (array_key_exists($locale->code, $requiredLocales)) {
+            $field->required($requiredLocales[$locale->code]);
+        } elseif (($requiredDefaultLocale !== null) && ($locale->code === $this->getDefaultLocale())) {
+            $field->required($requiredDefaultLocale);
         }
 
-        // @phpstan-ignore property.notFound
-        foreach ($field->translationFieldDecorators[$locale->code] ?? [] as $callback) {
-            $field = $callback($field);
+        foreach (FieldTranslationSettings::getDecorators($field, $locale->code) as $decorator) {
+            $decorated = $field->evaluate(
+                $decorator,
+                namedInjections: ['field' => $field, 'component' => $field, 'locale' => $locale->code],
+                typedInjections: [Field::class => $field, $field::class => $field],
+            );
+
+            if ($decorated instanceof Field) {
+                $field = $decorated;
+            }
         }
 
         return $field;

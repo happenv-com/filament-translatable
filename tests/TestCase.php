@@ -51,6 +51,14 @@ abstract class TestCase extends Orchestra
         ];
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Laravel only logs deprecations; make them fail the test instead.
+        $this->withoutDeprecationHandling();
+    }
+
     protected function defineEnvironment($app): void
     {
         $app['config']->set('database.default', 'testing');

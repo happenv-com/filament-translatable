@@ -8,6 +8,7 @@ use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
+use Happenv\FilamentTranslatable\Support\FieldTranslationSettings;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -33,84 +34,45 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
             $this->getAssetPackageName()
         );
 
-        Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true): Field {
-            /**
-             * @var Field $this
-             */
-            // @phpstan-ignore property.notFound, varTag.nativeType
-            $this->requiredDefaultLocale = true;
-
-            return $this;
-        });
-
-        Field::macro('getDefaultLocale', function (): ?string {
-            /**
-             * @var Field $this
-             */
-            // @phpstan-ignore varTag.nativeType
-            return $this->defaultLocale ?? null;
-        });
-
-        Field::macro('defaultLocale', function (?string $locale = null): Field {
-            /**
-             * @var Field $this
-             */
-            // @phpstan-ignore property.notFound, varTag.nativeType
-            $this->defaultLocale = $locale;
-
-            return $this;
-        });
-
         Field::macro('requiredLocale', function (string $locale, bool | Closure $condition = true): Field {
-            /**
-             * @var Field $this
-             */
-            // @phpstan-ignore property.notFound, varTag.nativeType
-            $this->translationFieldDecorators[$locale][] = function (Field $field) use ($condition): Field {
-                $field->required($condition);
-
-                return $field;
-            };
+            /** @var Field $this */
+            FieldTranslationSettings::addRequiredLocale($this, $locale, $condition);
 
             return $this;
         });
 
-        Field::macro('decorateTranslationField', function (string $locale, ?Closure $decorator = null): Field {
-            /**
-             * @var Field $this
-             */
-            // @phpstan-ignore property.notFound, varTag.nativeType
-            $this->translationFieldDecorators[$locale][] = $decorator;
+        Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true): Field {
+            /** @var Field $this */
+            FieldTranslationSettings::setRequiredDefaultLocale($this, $condition);
 
             return $this;
         });
 
-        Field::macro('translatable', function (bool $translatable = true, ?array $locales = null, ?Closure $translationFieldDecorator = null): Translations | Field {
-            /**
-             * @var Field $this
-             */
-            // @phpstan-ignore varTag.nativeType
-            if (! $translatable) {
+        Field::macro('decorateTranslationField', function (string $locale, Closure $decorator): Field {
+            /** @var Field $this */
+            FieldTranslationSettings::addDecorator($this, $locale, $decorator);
+
+            return $this;
+        });
+
+        Field::macro('translatable', function (bool $condition = true, array | Closure | null $locales = null, ?Closure $configureUsing = null): Translations | Field {
+            /** @var Field $this */
+            if (! $condition) {
                 return $this;
             }
 
-            /**
-             * @var Field $field
-             * @var Field $this
-             */
-            $field = $this->getClone();
+            $translations = Translations::make($this->getName() . '_translations')
+                ->schema([$this->getClone()]);
 
-            $tabsField = Translations::make($field->getName() . '_translations')
-                ->locales($locales)
-                ->schema([
-                    $field,
-                ]);
-
-            if ($translationFieldDecorator instanceof Closure) {
-                return $translationFieldDecorator($tabsField);
+            if ($locales !== null) {
+                $translations->locales($locales);
             }
 
-            return $tabsField;
+            if ($configureUsing !== null) {
+                $translations = $configureUsing($translations) ?? $translations;
+            }
+
+            return $translations;
         });
     }
 
