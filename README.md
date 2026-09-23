@@ -13,13 +13,13 @@
     <a href="https://packagist.org/packages/happenv-com/filament-translatable">
         <img alt="Packagist" src="https://img.shields.io/packagist/v/happenv-com/filament-translatable.svg?style=for-the-badge&logo=packagist">
     </a>
-    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arun-tests+branch%3Av3" class="filament-hidden">
+    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arun-tests+branch%3A5.x" class="filament-hidden">
         <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/run-tests.yml?style=for-the-badge&logo=github&label=tests">
     </a>
-    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Aphpstan+branch%3Av3" class="filament-hidden">
+    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Aphpstan+branch%3A5.x" class="filament-hidden">
         <img alt="PHPStan Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/phpstan.yml?style=for-the-badge&logo=github&label=phpstan">
     </a>
-    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arector+branch%3Av3" class="filament-hidden">
+    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arector+branch%3A5.x" class="filament-hidden">
         <img alt="Rector Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/rector.yml?style=for-the-badge&logo=github&label=rector">
     </a>
     <a href="https://packagist.org/packages/happenv-com/filament-translatable">
@@ -49,11 +49,13 @@
 
 ## Installation
 
-| Filament Version | Filament Translate Field Version |
-| ---------------- | -------------------------------- |
-| 3.x              | 2.x (old namespace)              |
-| 4.x              | 4.x                              |
-| 5.x              | 4.x                              |
+| Filament Version | Filament Translatable Version |
+| ---------------- | ----------------------------- |
+| 3.x              | 2.x (old namespace)           |
+| 4.x              | 5.x (4.x maintenance)         |
+| 5.x              | 5.x (4.x maintenance)         |
+
+Upgrading from 4.x? See [UPGRADING.md](UPGRADING.md).
 
 You can install the package via composer:
 
@@ -77,7 +79,7 @@ The [Spatie](https://github.com/spatie/laravel-translatable) package is the defa
 
 The [Astrotomic](https://github.com/astrotomic/laravel-translatable) package is an alternative translation backend.
 
-Follow the [Astrotomic documentation](https://docs.astrotomic.info/laravel-translatable/installation#models) to configure your models. However, instead of using the `Translatable` trait from the Astrotomic package, use ` Happenv\FilamentTranslatable\Traits\AstrotomicTranslatable`.
+Follow the [Astrotomic documentation](https://docs.astrotomic.info/laravel-translatable/installation#models) to configure your models using the original `Astrotomic\Translatable\Translatable` trait — no custom trait is needed. The component loads each locale's value from the record itself and saves it using Astrotomic's `title:en` attribute format.
 
 When using the Astrotomic package, configure the plugin to use Astrotomic mode:
 
@@ -95,13 +97,15 @@ You can also configure `translationMode` per component:
     ->translationMode(TranslationMode::Astrotomic)
 ```
 
-Or per field:
+Or per field (after `translatable()` you configure the `Translations` component):
 
 ```php
- TextInput::make('name')
+TextInput::make('name')
     ->translatable()
     ->translationMode(TranslationMode::Astrotomic)
 ```
+
+`translationMode()` accepts `TranslationMode::Spatie`, `TranslationMode::Astrotomic` or your own implementation of `Happenv\FilamentTranslatable\Drivers\TranslationDriver`.
 
 ## Setup
 
@@ -115,6 +119,26 @@ public function panel(Panel $panel): Panel
         ->plugin(FilamentTranslatablePlugin::make());
 }
 ```
+
+### Where settings come from
+
+The plugin is optional — the `Translations` component also works in plain Livewire components and in panels without the plugin. Settings are resolved from weakest to strongest:
+
+1. Package defaults: `app.fallback_locale` as the only locale and the default locale, Spatie mode, locale names shown, flags hidden, `24px` flags.
+2. The plugin registered on the **current** panel.
+3. `Translations::configureUsing()`, e.g. in a service provider:
+
+```php
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
+
+Translations::configureUsing(fn (Translations $translations) => $translations
+    ->locales(['en' => 'English', 'pl' => 'Polski'])
+    ->defaultLocale('en'));
+```
+
+4. Methods called on the component instance.
+
+Every setting accepts a value or a `Closure`.
 
 ### Setting translatable locales
 
@@ -151,6 +175,8 @@ FilamentTranslatablePlugin::make()
      ->defaultLocale('pl'),
 ```
 
+Otherwise, the `app.fallback_locale` config value will be used.
+
 ### Enable or disable flags in locale labels
 
 You can enable or disable flags in locale labels (disabled by default):
@@ -177,8 +203,6 @@ You can enable or disable locale names in locale labels (enabled by default):
 FilamentTranslatablePlugin::make()
     ->displayNamesInLocaleLabels(false)
 ```
-
-Otherwise, the `app.fallback_locale` config value will be used.
 
 ## Usage
 
@@ -213,7 +237,7 @@ TextInput::make('name')
 
 #### Marking a field as required for the default locale
 
-You can make a field required only for the default locale. The default locale is determined by the `defaultLocale()` plugin setting or the `app.fallback_locale` config value:
+You can make a field required only for the default locale. The default locale is determined by the `defaultLocale()` setting or the `app.fallback_locale` config value:
 
 ```php
 use Filament\Forms\Components\TextInput;
@@ -223,18 +247,42 @@ TextInput::make('name')
     ->translatable()
 ```
 
+Both `requiredLocale()` and `requiredDefaultLocale()` accept a condition as a boolean or a `Closure`:
+
+```php
+TextInput::make('name')
+    ->requiredDefaultLocale(fn (): bool => auth()->user()->isEditor())
+    ->translatable()
+```
+
 #### Decorating language-specific fields
 
-You can customize the appearance of fields for specific locales using the `decorateTranslationField()` method. This is useful for adding locale-specific prefixes, suffixes, or other modifications:
+You can customize the appearance of fields for specific locales using the `decorateTranslationField()` method. This is useful for adding locale-specific prefixes, suffixes, or other modifications. The decorator can also receive the locale code as `$locale`:
 
 ```php
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('price')
     ->decorateTranslationField('pl', fn (TextInput $field) => $field->suffix('PLN'))
-    ->decorateTranslationField('en', fn (TextInput $field) => $field->prefix('USD'))
+    ->decorateTranslationField('en', fn (TextInput $field, string $locale) => $field->prefix('USD'))
     ->translatable()
 ```
+
+#### Passing options to `translatable()`
+
+Use named arguments to set the locales or configure the generated `Translations` component:
+
+```php
+use Filament\Forms\Components\TextInput;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
+
+TextInput::make('title')->translatable(
+    locales: ['en', 'pl'],
+    configureUsing: fn (Translations $translations) => $translations->vertical(),
+);
+```
+
+When `locales` is omitted, the locales configured by the plugin or `configureUsing()` are used.
 
 #### Customizing `Translations` component
 
@@ -297,16 +345,17 @@ Translations::make('translations')
 
 #### Setting custom field labels per locale
 
-You can customize field labels for each locale using the `fieldTranslatableLabel()` method. This is useful for translating field labels themselves:
+You can customize field labels for each locale using the `fieldTranslatableLabel()` method. This is useful for translating field labels themselves. In all closures of this package `$locale` is the locale code (a `string`):
 
 ```php
+use Filament\Forms\Components\Field;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
  Translations::make()
     ->schema([
         // Fields
     ])
-    ->fieldTranslatableLabel(fn ($field, $locale) => __($field->getName(), locale: $locale))
+    ->fieldTranslatableLabel(fn (Field $field, string $locale) => __($field->getName(), locale: $locale))
 ```
 
 #### Adding prefix/suffix locale labels to fields
@@ -326,13 +375,13 @@ Translations::make('translations')
 
 #### Customizing the locale label format
 
-By default, the prefix/suffix locale label is generated from the locale code and enclosed in parentheses (e.g., "(English)"). You can customize this format using the `preformLocaleLabelUsing()` method:
+By default, the prefix/suffix locale label is the locale label enclosed in parentheses (e.g., "(English)"). You can customize this format using the `formatLocaleLabelUsing()` method:
 
 ```php
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
-    ->preformLocaleLabelUsing(fn (string $locale, string $label) => "[{$label}]");
+    ->formatLocaleLabelUsing(fn (string $locale, string $label) => "[{$label}]");
 ```
 
 #### Conditionally adding locale labels
@@ -340,16 +389,16 @@ Translations::make('translations')
 You can conditionally add prefix/suffix labels by injecting the `$field` parameter into the callback. This allows you to apply locale labels only to specific fields:
 
 ```php
-use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Field;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
     // ...
-    ->prefixLocaleLabel(function(Component $field) {
+    ->prefixLocaleLabel(function(Field $field) {
         // Must return a boolean value
         return $field->getName() == 'title';
     })
-    ->suffixLocaleLabel(function(Component $field) {
+    ->suffixLocaleLabel(function(Field $field) {
         // Must return a boolean value
         return $field->getName() == 'title';
     })
@@ -362,7 +411,7 @@ You can add custom Filament actions to each locale tab using the `actions()` met
 
 ```php
 
-use Filament\Forms\Components\Actions\Action;
+use Filament\Actions\Action;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 Translations::make('translations')
@@ -377,10 +426,10 @@ To access the current locale within an action, use the `$arguments` parameter an
 
 ```php
 
-use Filament\Forms\Components\Actions\Action;
+use Filament\Actions\Action;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 
-Translations::make()
+Translations::make('translations')
     ->actions([
         Action::make('fillDumpTitle')
             ->action(function (array $arguments) {
@@ -533,7 +582,7 @@ With `include(['title'])`:
 To publish the views, run:
 
 ```bash
-php artisan vendor:publish --provider=" Happenv\\FilamentTranslatable\\FilamentTranslatableProvider" --tag="filament-translatable-views"
+php artisan vendor:publish --tag="filament-translatable-views"
 ```
 
 ## Testing
