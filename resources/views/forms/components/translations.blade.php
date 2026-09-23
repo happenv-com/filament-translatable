@@ -6,8 +6,6 @@
     $label = $getLabel();
     $livewireProperty = $getLivewireProperty();
     $renderHookScopes = $getRenderHookScopes();
-    $locales = $getLocales() ?? [];
-    $defaultLocale = $locales[0] ?? null;
 
     $actions = $getActions();
     $hasActions = filled($actions);

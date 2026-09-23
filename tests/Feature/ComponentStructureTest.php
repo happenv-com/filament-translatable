@@ -78,7 +78,7 @@ it('registers actions on every locale tab and passes the locale', function (): v
     $component->callAction(TestAction::make('fillTitle')->schemaComponent('pl::data::tab', schema: 'form')->arguments(['locale' => 'pl']));
 
     expect($component->get('actionCalls'))->toBe([['action' => 'fillTitle', 'locale' => 'pl']]);
-})->todo('Tab::getKey() ignores $isAbsolute, so tab actions cannot be resolved — fixed in Task 4');
+});
 
 it('supports vertical tabs', function (): void {
     PostForm::$configureTranslationsUsing = fn (Translations $t) => $t->vertical();

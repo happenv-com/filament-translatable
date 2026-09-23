@@ -14,6 +14,7 @@ use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
 use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 
@@ -175,220 +176,184 @@ class Translations extends Tabs
         return $this;
     }
 
-    public function getLocaleLabel(Locale $locale, bool $withFlag = true): string | Htmlable
-    {
-        $label = null;
-
-        if ($this->hasFlagsInLocaleLabels() && $withFlag) {
-            $label .= '<img src="' . \asset($locale->flag) . '" style="width:' . $this->getFlagWidth() . ';max-width:' . $this->getFlagWidth() . '" alt="' . $locale->label . '" class="inline-block align-middle' . ($this->hasNamesInLocaleLabels() ? ' me-2' : '') . '" />';
-        }
-
-        if ($this->hasNamesInLocaleLabels()) {
-            $label .= $locale->label;
-
-        }
-
-        $label ??= $locale->code;
-        if ($this->hasFlagsInLocaleLabels() && $withFlag) {
-            return new HtmlString('<div class="text-nowrap">' . $label . '</div>');
-        }
-
-        return $label;
-    }
-
-    public function hasPrefixLocaleLabel(Component $component, Locale $locale): bool
-    {
-        return boolval($this->evaluate($this->hasPrefixLocaleLabel, [
-            'field' => $component,
-            'locale' => $locale,
-        ]) ?? false);
-    }
-
-    public function hasSuffixLocaleLabel(Component $component, Locale $locale): bool
-    {
-        return boolval($this->evaluate($this->hasSuffixLocaleLabel, [
-            'field' => $component,
-            'locale' => $locale,
-        ]) ?? false);
-    }
-
-    public function getFieldTranslatableLabel(Component $component, Locale $locale): ?string
-    {
-        return $this->evaluate($this->fieldTranslatableLabel, [
-            'field' => $component,
-            'locale' => $locale,
-        ]);
-    }
-
     /**
-     * @return array<Component>
+     * @return array<string, Schema>
      */
-    public function getChildComponentsByLocale(string $locale): array
+    #[\Override]
+    public function getDefaultChildSchemas(): array
     {
-        /** @var array<Component> */
-        return $this->evaluate($this->childComponents, [
-            'locale' => $locale,
-        ]);
+        $schemas = [];
+
+        foreach ($this->getLocales() as $code => $locale) {
+            $components = $this->evaluate($this->childComponents['default'] ?? [], ['locale' => $code]) ?? [];
+
+            if ($components instanceof Schema) {
+                $components = $components->getComponents(withHidden: true);
+            }
+
+            $schemas[$code] = Schema::make($this->getLivewire())
+                ->parentComponent($this)
+                ->components([
+                    Tab::make($locale->label)
+                        ->locale($code)
+                        ->label($this->getLocaleLabel($locale))
+                        ->registerActions($this->getActions())
+                        ->schema(array_map(
+                            fn (Component | Htmlable | string $component): Component | Htmlable | string => $this->prepareLocaleComponent($component, $locale),
+                            $components,
+                        )),
+                ]);
+        }
+
+        return $schemas;
     }
 
     #[\Override]
     public function getActiveTab(): int
     {
         if ($this->isTabPersistedInQueryString()) {
-
             $queryStringTab = request()->query($this->getTabQueryStringKey());
+            $position = 1;
 
-            $tabs = collect($this->getChildSchemas())
-                ->map(fn (Schema $schema) => collect($schema->getComponents())->first() ?? null)
-                ->values();
-
-            foreach ($tabs as $index => $tab) {
-
-                if ($tab?->getId() !== $queryStringTab) {
-                    continue;
+            foreach ($this->getChildSchemas() as $schema) {
+                if (Arr::first($schema->getComponents())?->getId() === $queryStringTab) {
+                    return $position;
                 }
 
-                return $index + 1;
+                $position++;
             }
         }
 
-        return $this->evaluate($this->activeTab, ['locales' => $this->getLocales()]);
+        return $this->evaluate($this->activeTab);
     }
 
-    /**
-     * @return array<Schema>
-     */
-    #[\Override]
-    public function getChildSchemas(bool $withHidden = false): array
+    protected function prepareLocaleComponent(Component | Htmlable | string $component, Locale $locale): Component | Htmlable | string
     {
-        $containers = [];
-
-        $locales = $this->getLocales();
-
-        foreach ($locales as $locale) {
-
-            $containers[$locale->code] = Schema::make($this->getLivewire())
-                ->parentComponent($this)
-                ->components([
-                    Tab::make($locale->label)
-                        ->registerActions($this->getActions())
-                        ->label($this->getLocaleLabel($locale))
-                        ->locale($locale->code)
-
-                        ->schema(
-                            (new Collection($this->getChildComponentsByLocale($locale->code)['default']))
-                                ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $component): Htmlable | string => $this->prepareTranslateLocaleComponent($component, $locale))
-                                ->all()
-                        ),
-                ])
-                ->getClone();
-        }
-
-        return $containers;
-    }
-
-    protected function prepareTranslateLocaleComponent(Component | Htmlable | string $component, Locale $locale): Component | Htmlable | string
-    {
-
-        if (($component instanceof Htmlable && ! $component instanceof Component) || \is_string($component)) {
+        if (! $component instanceof Component) {
             return $component;
         }
 
-        $localeComponent = clone $component;
+        $localeComponent = $component->getClone();
 
-        if ($localeComponent instanceof Field || method_exists($localeComponent, 'getName')) {
+        if ($localeComponent instanceof Field) {
+            return $this->isTranslatable($localeComponent->getName())
+                ? $this->translateField($localeComponent, $locale)
+                : $localeComponent;
+        }
 
-            $localeComponentName = $localeComponent->getName();
+        $childComponents = $localeComponent->getDefaultChildComponents();
 
-            if (filled($localeComponentName) && is_string($localeComponentName)) {
-
-                $include = $this->evaluate($this->include);
-
-                if ($include instanceof Collection) {
-                    $include = $include->all();
-                }
-
-                if ($include !== null && ! in_array($localeComponentName, $include, true)) {
-                    return $localeComponent;
-                }
-
-                $exclude = $this->evaluate($this->exclude);
-
-                if ($exclude instanceof Collection) {
-                    $exclude = $exclude->all();
-                }
-
-                if (in_array($localeComponentName, $exclude, true)) {
-                    return $localeComponent;
-                }
-
-                // this is macro
-                // @phpstan-ignore method.notFound
-                $localeComponent->defaultLocale($this->getDefaultLocale());
-
-                if ($localeComponent->requiredDefaultLocale ?? false) {
-                    // this is macro
-                    // @phpstan-ignore method.notFound, method.notFound
-                    $localeComponent->requiredLocale($localeComponent->getDefaultLocale() ?? $this->getDefaultLocale());
-                }
-
-                assert(\method_exists($localeComponent, 'label'));
-                assert(\method_exists($localeComponent, 'getLabel'));
-                assert(\method_exists($component, 'getLabel'));
-
-                $localeComponent->label($this->getFieldTranslatableLabel($component, $locale) ?? $component->getLabel());
-
-                $localeLabel = $this->getLocaleLabel($locale, false);
-                $performedLocaleLabel = $this->formatLocaleLabelUsing instanceof Closure
-                    ? $this->evaluate($this->formatLocaleLabelUsing, [
-                        'locale' => $locale,
-                        'label' => $localeLabel,
-                    ])
-                    : null;
-                if (! $performedLocaleLabel) {
-                    $performedLocaleLabel = "({$localeLabel})";
-                }
-                if ($this->hasPrefixLocaleLabel($component, $locale)) {
-                    $localeComponent->label(new HtmlString("{$performedLocaleLabel} {$localeComponent->getLabel()}"));
-                }
-                if ($this->hasSuffixLocaleLabel($component, $locale)) {
-                    $localeComponent->label("{$localeComponent->getLabel()} {$performedLocaleLabel}");
-                }
-
-                if (method_exists($localeComponent, 'name')) {
-                    $localeComponentName = $this->getTranslationDriver()->getFieldName($localeComponentName, $locale->code);
-
-                    $localeComponent->name($localeComponentName);
-                }
-
-                $localeComponent->statePath($localeComponent->getName());
-                $localeComponent->flushCachedAbsoluteStatePath();
-
-                $decorator = $localeComponent->translationFieldDecorators ?? null;
-
-                if (isset($decorator[$locale->code]) && is_array($decorator[$locale->code])) {
-                    foreach ($decorator[$locale->code] as $callback) {
-                        $localeComponent = $callback($localeComponent);
-                    }
-                }
-
-            }
-
-        } else {
-
-            $childComponents = $localeComponent->getDefaultChildComponents();
-
-            if ($childComponents) {
-
-                $localeComponent->schema(
-                    collect($childComponents)
-                        ->map(fn (\Filament\Schemas\Components\Component | \Illuminate\Contracts\Support\Htmlable | string $childComponent): Htmlable | string => $this->prepareTranslateLocaleComponent($childComponent, $locale))
-                        ->all()
-                );
-            }
+        if (is_array($childComponents) && filled($childComponents)) {
+            $localeComponent->schema(array_map(
+                fn (Component | Htmlable | string $child): Component | Htmlable | string => $this->prepareLocaleComponent($child, $locale),
+                $childComponents,
+            ));
         }
 
         return $localeComponent;
+    }
+
+    protected function isTranslatable(string $name): bool
+    {
+        $include = $this->evaluate($this->include);
+        $include = $include instanceof Collection ? $include->all() : $include;
+
+        if ($include !== null && ! in_array($name, $include, true)) {
+            return false;
+        }
+
+        $exclude = $this->evaluate($this->exclude);
+        $exclude = $exclude instanceof Collection ? $exclude->all() : ($exclude ?? []);
+
+        return ! in_array($name, $exclude, true);
+    }
+
+    protected function translateField(Field $field, Locale $locale): Field
+    {
+        $attribute = $field->getName();
+
+        $label = $this->evaluate($this->fieldTranslatableLabel, [
+            'field' => $field,
+            'locale' => $locale->code,
+        ]) ?? $field->getLabel();
+
+        $localeLabel = $this->formatLocaleLabel($locale);
+
+        if ($this->evaluateForField($this->hasPrefixLocaleLabel, $field, $locale)) {
+            $label = "{$localeLabel} {$label}";
+        }
+
+        if ($this->evaluateForField($this->hasSuffixLocaleLabel, $field, $locale)) {
+            $label = "{$label} {$localeLabel}";
+        }
+
+        $name = $this->getTranslationDriver()->getFieldName($attribute, $locale->code);
+
+        $field
+            ->label($label)
+            ->name($name)
+            ->statePath($name);
+
+        $field->flushCachedAbsoluteStatePath();
+
+        // replaced in Task 5
+        // @phpstan-ignore method.notFound
+        $field->defaultLocale($this->getDefaultLocale());
+
+        // @phpstan-ignore property.notFound
+        if ($field->requiredDefaultLocale ?? false) {
+            // @phpstan-ignore method.notFound
+            $field->requiredLocale($this->getDefaultLocale());
+        }
+
+        // @phpstan-ignore property.notFound
+        foreach ($field->translationFieldDecorators[$locale->code] ?? [] as $callback) {
+            $field = $callback($field);
+        }
+
+        return $field;
+    }
+
+    protected function evaluateForField(bool | Closure $condition, Field $field, Locale $locale): bool
+    {
+        return (bool) $this->evaluate($condition, [
+            'field' => $field,
+            'locale' => $locale->code,
+        ]);
+    }
+
+    public function getLocaleLabel(Locale $locale, bool $withFlag = true): string | Htmlable
+    {
+        $withName = $this->hasNamesInLocaleLabels();
+
+        if (! ($withFlag && $this->hasFlagsInLocaleLabels())) {
+            return $withName ? $locale->label : $locale->code;
+        }
+
+        $width = e($this->getFlagWidth());
+
+        $html = '<img src="' . e(asset($locale->flag)) . '"'
+            . ' style="width:' . $width . ';max-width:' . $width . '"'
+            . ' alt="' . e($locale->label) . '"'
+            . ' class="inline-block align-middle' . ($withName ? ' me-2' : '') . '" />';
+
+        if ($withName) {
+            $html .= e($locale->label);
+        }
+
+        return new HtmlString('<div class="text-nowrap">' . $html . '</div>');
+    }
+
+    public function formatLocaleLabel(Locale $locale): string
+    {
+        $label = (string) $this->getLocaleLabel($locale, withFlag: false);
+
+        $formatted = $this->evaluate($this->formatLocaleLabelUsing, [
+            'locale' => $locale->code,
+            'label' => $label,
+        ]);
+
+        return filled($formatted) ? (string) $formatted : "({$label})";
     }
 
     /**

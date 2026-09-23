@@ -12,17 +12,22 @@ class Tab extends \Filament\Schemas\Components\Tabs\Tab
 
     protected ?string $locale = null;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->key(function (Tab $component): string {
+            $statePath = $component->getStatePath();
+
+            return $component->getLocale() . '::' . (filled($statePath) ? "{$statePath}::tab" : 'tab');
+        }, isInheritable: false);
+    }
+
     public function locale(?string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
-    }
-
-    #[\Override]
-    public function getKey(bool $isAbsolute = true): ?string
-    {
-        return parent::getKey() ?? (count($this->getActions()) > 0 ? $this->getId() : null);
     }
 
     public function getLocale(): ?string
