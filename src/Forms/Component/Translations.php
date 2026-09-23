@@ -8,6 +8,7 @@ use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
+use Happenv\FilamentTranslatable\Drivers\TranslationDriver;
 use Happenv\FilamentTranslatable\Dto\Locale;
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
@@ -25,11 +26,11 @@ class Translations extends Tabs
     protected string $view = 'filament-translatable::forms.components.translations';
 
     /**
-     * @var null|Closure|array<string>|Collection<int,string>
+     * @var array<int|string, mixed>|Collection<int|string, mixed>|Closure|null
      */
-    protected null | Closure | array | Collection $locales = null;
+    protected array | Collection | Closure | null $locales = null;
 
-    protected ?string $defaultLocale = null;
+    protected string | Closure | null $defaultLocale = null;
 
     /**
      * @var null|Closure|array<string>|Collection<int,string>
@@ -41,34 +42,28 @@ class Translations extends Tabs
      */
     protected null | Closure | array | Collection $exclude = [];
 
-    /**
-     * @var null|Closure|array<string,string>|Collection<string,string>
-     */
-    protected null | Closure | array | Collection $localeLabels = null;
-
     protected Closure | bool $hasPrefixLocaleLabel = false;
 
     protected Closure | bool $hasSuffixLocaleLabel = false;
 
     protected ?Closure $fieldTranslatableLabel = null;
 
-    protected ?Closure $preformLocaleLabelUsing = null;
+    protected ?Closure $formatLocaleLabelUsing = null;
 
-    protected int | Closure $activeTab = 1;
+    protected TranslationMode | TranslationDriver | Closure $translationMode = TranslationMode::Spatie;
 
-    protected string | Closure | null $tabQueryStringKey = null;
+    protected bool | Closure $displayFlagsInLocaleLabels = false;
 
-    protected string | Closure | null $livewireProperty = null;
+    protected bool | Closure $displayNamesInLocaleLabels = true;
 
-    protected bool | Closure $isVertical = false;
+    protected string | Closure $flagWidth = '24px';
 
-    protected string | Closure | null $flagWidth = null;
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-    protected bool | Closure | null $displayFlagsInLocaleLabels = null;
-
-    protected bool | Closure | null $displayNamesInLocaleLabels = null;
-
-    protected Closure | TranslationMode | null $translationMode = null;
+        FilamentTranslatablePlugin::current()?->configureComponent($this);
+    }
 
     /**
      * @param  Closure|array<string>|Collection<int,string>  $include
@@ -90,16 +85,18 @@ class Translations extends Tabs
         return $this;
     }
 
-    public function translationMode(TranslationMode | Closure | null $mode): static
+    public function translationMode(TranslationMode | TranslationDriver | Closure $mode): static
     {
         $this->translationMode = $mode;
 
         return $this;
     }
 
-    public function getTranslationMode(): TranslationMode
+    public function getTranslationDriver(): TranslationDriver
     {
-        return $this->evaluate($this->translationMode ?? FilamentTranslatablePlugin::get()->getTranslationMode());
+        $mode = $this->evaluate($this->translationMode);
+
+        return $mode instanceof TranslationDriver ? $mode : $mode->driver();
     }
 
     public function defaultLocale(string | Closure | null $locale): static
@@ -109,15 +106,15 @@ class Translations extends Tabs
         return $this;
     }
 
-    public function getDefaultLocale(): ?string
+    public function getDefaultLocale(): string
     {
-        return $this->evaluate($this->defaultLocale ?? FilamentTranslatablePlugin::get()->getDefaultLocale());
+        return $this->evaluate($this->defaultLocale) ?? (string) config('app.fallback_locale', 'en');
     }
 
     /**
-     * @param  Closure|array<string>|Collection<int,string>|null  $locales
+     * @param  array<int|string, mixed>|Collection<int|string, mixed>|Closure|null  $locales
      */
-    public function locales(Closure | array | Collection | null $locales): static
+    public function locales(array | Collection | Closure | null $locales): static
     {
         $this->locales = $locales;
 
@@ -125,13 +122,11 @@ class Translations extends Tabs
     }
 
     /**
-     * @param  Closure|array<string>|Collection<int,string>  $labels
+     * @return array<string, Locale>
      */
-    public function localeLabels(Closure | array | Collection $labels): static
+    public function getLocales(): array
     {
-        $this->localeLabels = $labels;
-
-        return $this;
+        return Locale::collect($this->evaluate($this->locales) ?? [$this->getDefaultLocale()]);
     }
 
     public function prefixLocaleLabel(Closure | bool $condition = true): static
@@ -155,11 +150,19 @@ class Translations extends Tabs
         return $this;
     }
 
-    public function preformLocaleLabelUsing(?Closure $preformLocaleLabelUsing = null): static
+    public function formatLocaleLabelUsing(?Closure $callback): static
     {
-        $this->preformLocaleLabelUsing = $preformLocaleLabelUsing;
+        $this->formatLocaleLabelUsing = $callback;
 
         return $this;
+    }
+
+    /**
+     * @deprecated Use `formatLocaleLabelUsing()` instead.
+     */
+    public function preformLocaleLabelUsing(?Closure $callback = null): static
+    {
+        return $this->formatLocaleLabelUsing($callback);
     }
 
     /**
@@ -170,41 +173,6 @@ class Translations extends Tabs
         $this->actions = $actions;
 
         return $this;
-    }
-
-    /**
-     * @return array<Locale>
-     */
-    public function getLocales(): array
-    {
-        $locales = $this->evaluate($this->locales ?? FilamentTranslatablePlugin::get()->getLocales());
-
-        if ($locales instanceof Collection) {
-            $locales = $locales->all();
-        }
-
-        $preparedLocales = [];
-
-        foreach ($locales as $key => $value) {
-            // If the key is an integer, create a new Locale with the code only
-            if (is_int($key) && is_string($value)) {
-                $preparedLocales[$key] = new Locale($value);
-
-                continue;
-            }
-
-            // If the key is a string, create a new Locale with the key as code and value as label
-            if (is_string($key)) {
-                $preparedLocales[$key] = new Locale($key, $value);
-
-                continue;
-            }
-
-            // Otherwise, treat the value as a Locale
-            $preparedLocales[] = $value;
-        }
-
-        return $preparedLocales;
     }
 
     public function getLocaleLabel(Locale $locale, bool $withFlag = true): string | Htmlable
@@ -371,8 +339,8 @@ class Translations extends Tabs
                 $localeComponent->label($this->getFieldTranslatableLabel($component, $locale) ?? $component->getLabel());
 
                 $localeLabel = $this->getLocaleLabel($locale, false);
-                $performedLocaleLabel = $this->preformLocaleLabelUsing instanceof Closure
-                    ? $this->evaluate($this->preformLocaleLabelUsing, [
+                $performedLocaleLabel = $this->formatLocaleLabelUsing instanceof Closure
+                    ? $this->evaluate($this->formatLocaleLabelUsing, [
                         'locale' => $locale,
                         'label' => $localeLabel,
                     ])
@@ -388,17 +356,7 @@ class Translations extends Tabs
                 }
 
                 if (method_exists($localeComponent, 'name')) {
-                    switch ($this->getTranslationMode()) {
-                        case TranslationMode::Astrotomic:
-                            $localeComponentName = "{$localeComponentName}:{$locale->code}";
-
-                            break;
-                        case TranslationMode::Spatie:
-                        default:
-                            $localeComponentName = "{$localeComponentName}.{$locale->code}";
-
-                            break;
-                    }
+                    $localeComponentName = $this->getTranslationDriver()->getFieldName($localeComponentName, $locale->code);
 
                     $localeComponent->name($localeComponentName);
                 }
@@ -455,10 +413,10 @@ class Translations extends Tabs
 
     public function hasFlagsInLocaleLabels(): bool
     {
-        return $this->displayFlagsInLocaleLabels !== null ? $this->evaluate($this->displayFlagsInLocaleLabels) : FilamentTranslatablePlugin::get()->getDisplayFlagsInLocaleLabels();
+        return (bool) $this->evaluate($this->displayFlagsInLocaleLabels);
     }
 
-    public function displayNamesInLocaleLabels(bool $condition = true): static
+    public function displayNamesInLocaleLabels(bool | Closure $condition = true): static
     {
         $this->displayNamesInLocaleLabels = $condition;
 
@@ -467,7 +425,7 @@ class Translations extends Tabs
 
     public function hasNamesInLocaleLabels(): bool
     {
-        return $this->displayNamesInLocaleLabels !== null ? $this->evaluate($this->displayNamesInLocaleLabels) : FilamentTranslatablePlugin::get()->getDisplayNamesInLocaleLabels();
+        return (bool) $this->evaluate($this->displayNamesInLocaleLabels);
     }
 
     public function flagWidth(string | Closure $width): static
@@ -479,6 +437,6 @@ class Translations extends Tabs
 
     public function getFlagWidth(): string
     {
-        return $this->flagWidth !== null ? $this->evaluate($this->flagWidth) : FilamentTranslatablePlugin::get()->getFlagWidth();
+        return (string) $this->evaluate($this->flagWidth);
     }
 }

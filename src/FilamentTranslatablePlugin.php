@@ -4,40 +4,38 @@ namespace Happenv\FilamentTranslatable;
 
 use Closure;
 use Filament\Contracts\Plugin;
+use Filament\Facades\Filament;
 use Filament\Panel;
-use Filament\Support\Concerns\EvaluatesClosures;
+use Happenv\FilamentTranslatable\Drivers\TranslationDriver;
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
+use Illuminate\Support\Collection;
 
 class FilamentTranslatablePlugin implements Plugin
 {
-    use EvaluatesClosures;
+    public const ID = 'filament-translatable';
 
     /**
-     * @var array<string>
+     * @var array<int|string, mixed>|Collection<int|string, mixed>|Closure|null
      */
-    protected array | Closure | null $locales = [];
+    protected array | Collection | Closure | null $locales = null;
 
-    protected string | null | Closure $defaultLocale = null;
+    protected string | Closure | null $defaultLocale = null;
 
-    protected ?Closure $getLocaleLabelUsing = null;
+    protected TranslationMode | TranslationDriver | Closure | null $translationMode = null;
 
-    protected bool | Closure $displayFlagsInLocaleLabels = false;
+    protected bool | Closure | null $displayFlagsInLocaleLabels = null;
 
-    protected bool | Closure $displayNamesInLocaleLabels = true;
+    protected bool | Closure | null $displayNamesInLocaleLabels = null;
 
-    protected string | Closure $flagWidth = '24px';
-
-    protected TranslationMode $translationMode = TranslationMode::Spatie;
+    protected string | Closure | null $flagWidth = null;
 
     public function getId(): string
     {
-        return 'filament-translatable';
+        return self::ID;
     }
 
-    public function register(Panel $panel): void
-    {
-        //
-    }
+    public function register(Panel $panel): void {}
 
     public function boot(Panel $panel): void {}
 
@@ -46,58 +44,87 @@ class FilamentTranslatablePlugin implements Plugin
         return app(static::class);
     }
 
-    public static function get(): static
+    /**
+     * The plugin registered on the current panel, if any.
+     */
+    public static function current(): ?static
     {
-        /** @var static $plugin */
-        $plugin = filament(app(static::class)->getId());
+        $panel = Filament::getCurrentPanel();
 
-        return $plugin;
+        if (! $panel?->hasPlugin(self::ID)) {
+            return null;
+        }
+
+        /** @var static */
+        return $panel->getPlugin(self::ID);
     }
 
     /**
-     * @param  array<string> | Closure |null  $locales
+     * Applies the explicitly configured settings to the component.
      */
-    public function locales(array | Closure | null $locales = null): static
+    public function configureComponent(Translations $component): void
+    {
+        if ($this->locales !== null) {
+            $component->locales($this->locales);
+        }
+
+        if ($this->defaultLocale !== null) {
+            $component->defaultLocale($this->defaultLocale);
+        }
+
+        if ($this->translationMode !== null) {
+            $component->translationMode($this->translationMode);
+        }
+
+        if ($this->displayFlagsInLocaleLabels !== null) {
+            $component->displayFlagsInLocaleLabels($this->displayFlagsInLocaleLabels);
+        }
+
+        if ($this->displayNamesInLocaleLabels !== null) {
+            $component->displayNamesInLocaleLabels($this->displayNamesInLocaleLabels);
+        }
+
+        if ($this->flagWidth !== null) {
+            $component->flagWidth($this->flagWidth);
+        }
+    }
+
+    /**
+     * @param  array<int|string, mixed>|Collection<int|string, mixed>|Closure|null  $locales
+     */
+    public function locales(array | Collection | Closure | null $locales): static
     {
         $this->locales = $locales;
 
         return $this;
     }
 
-    public function translationMode(TranslationMode $mode): static
+    public function defaultLocale(string | Closure | null $locale): static
+    {
+        $this->defaultLocale = $locale;
+
+        return $this;
+    }
+
+    public function translationMode(TranslationMode | TranslationDriver | Closure | null $mode): static
     {
         $this->translationMode = $mode;
 
         return $this;
     }
 
-    public function getTranslationMode(): TranslationMode
-    {
-        return $this->translationMode;
-    }
-
-    public function displayFlagsInLocaleLabels(bool $condition = true): static
+    public function displayFlagsInLocaleLabels(bool | Closure $condition = true): static
     {
         $this->displayFlagsInLocaleLabels = $condition;
 
         return $this;
     }
 
-    public function getDisplayFlagsInLocaleLabels(): bool
-    {
-        return $this->displayFlagsInLocaleLabels;
-    }
-
-    public function displayNamesInLocaleLabels(bool $condition = true): static
+    public function displayNamesInLocaleLabels(bool | Closure $condition = true): static
     {
         $this->displayNamesInLocaleLabels = $condition;
 
         return $this;
-    }
-
-    public function getDisplayNamesInLocaleLabels(): bool
-    {
-        return $this->displayNamesInLocaleLabels;
     }
 
     public function flagWidth(string | Closure $width): static
@@ -105,30 +132,5 @@ class FilamentTranslatablePlugin implements Plugin
         $this->flagWidth = $width;
 
         return $this;
-    }
-
-    public function getFlagWidth(): string
-    {
-        return $this->evaluate($this->flagWidth);
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getLocales(): ?array
-    {
-        return $this->evaluate($this->locales);
-    }
-
-    public function defaultLocale(string | Closure $locale): static
-    {
-        $this->defaultLocale = $locale;
-
-        return $this;
-    }
-
-    public function getDefaultLocale(): string
-    {
-        return $this->evaluate($this->defaultLocale) ?? config('app.fallback_locale', 'en');
     }
 }
