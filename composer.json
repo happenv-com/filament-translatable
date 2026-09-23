@@ -55,13 +55,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Happenv\\FilamentTranslatable\\": "src/",
-            "Happenv\\FilamentTranslatable\\Database\\Factories\\": "database/factories/"
+            "Happenv\\FilamentTranslatable\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Happenv\\FilamentTranslatable\\Tests\\": "tests/src"
+            "Happenv\\FilamentTranslatable\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -79,6 +78,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-5.x": "5.x-dev"
+        },
         "laravel": {
             "providers": [
                 "Happenv\\FilamentTranslatable\\FilamentTranslatableServiceProvider"

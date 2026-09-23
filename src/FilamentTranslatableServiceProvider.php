@@ -19,8 +19,7 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
     {
         $package
             ->name(static::$name)
-            ->hasViews()
-            ->hasConfigFile();
+            ->hasViews();
 
         $this->publishes([
             __DIR__ . '/../resources/flags' => public_path('vendor/filament-translatable/flags'),

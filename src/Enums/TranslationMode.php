@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Happenv\FilamentTranslatable\Enums;
 
-enum TranslationMode
+enum TranslationMode: string
 {
-    case Spatie;
+    case Spatie = 'spatie';
 
-    case Astrotomic;
+    case Astrotomic = 'astrotomic';
 }

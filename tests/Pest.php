@@ -1,5 +1,11 @@
 <?php
 
+use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__ . 'src\\');
+pest()->extend(TestCase::class)->in('Unit', 'Feature');
+
+dataset('drivers', [
+    'spatie' => [TranslationMode::Spatie],
+    'astrotomic' => [TranslationMode::Astrotomic],
+]);
