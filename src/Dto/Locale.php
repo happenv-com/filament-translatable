@@ -19,4 +19,25 @@ final readonly class Locale
         $this->label = $label ?? $code;
         $this->flag = $flag ?? 'vendor/filament-translatable/flags/' . $code . '.svg';
     }
+
+    /**
+     * @param  iterable<int|string, string|Locale|null>  $locales
+     * @return array<string, Locale>
+     */
+    public static function collect(iterable $locales): array
+    {
+        $collected = [];
+
+        foreach ($locales as $key => $value) {
+            $locale = match (true) {
+                $value instanceof self => $value,
+                is_string($key) => new self($key, $value),
+                default => new self((string) $value),
+            };
+
+            $collected[$locale->code] = $locale;
+        }
+
+        return $collected;
+    }
 }
