@@ -15,6 +15,7 @@ use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
 use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
 use Happenv\FilamentTranslatable\Support\FieldTranslationSettings;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
@@ -226,6 +227,35 @@ class Translations extends Tabs
         }
 
         return $this->evaluate($this->activeTab);
+    }
+
+    #[\Override]
+    public function callAfterStateHydrated(): static
+    {
+        parent::callAfterStateHydrated();
+
+        $record = $this->getRecord();
+
+        if (! $record instanceof Model) {
+            return $this;
+        }
+
+        $driver = $this->getTranslationDriver();
+
+        foreach ($this->getChildSchemas(withHidden: true) as $schema) {
+            foreach ($schema->getFlatFields(withHidden: true) as $field) {
+                $attribute = FieldTranslationSettings::getTranslatedAttribute($field);
+                $locale = FieldTranslationSettings::getTranslatedLocale($field);
+
+                if (($attribute === null) || ($locale === null) || ($field->getRawState() !== null)) {
+                    continue;
+                }
+
+                $field->state($driver->getTranslationFromRecord($record, $attribute, $locale));
+            }
+        }
+
+        return $this;
     }
 
     protected function prepareLocaleComponent(Component | Htmlable | string $component, Locale $locale): Component | Htmlable | string

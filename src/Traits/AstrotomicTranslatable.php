@@ -6,6 +6,10 @@ namespace Happenv\FilamentTranslatable\Traits;
 
 use Astrotomic\Translatable\Translatable as OriginalTranslatable;
 
+/**
+ * @deprecated Since 5.0 the Translations component loads Astrotomic translations itself.
+ *             Use `Astrotomic\Translatable\Translatable` directly. Will be removed in 6.0.
+ */
 // @phpstan-ignore trait.unused
 trait AstrotomicTranslatable
 {
