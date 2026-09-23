@@ -15,8 +15,8 @@ use function Pest\Livewire\livewire;
 
 it('creates a tab per locale', function (TranslationMode $mode): void {
     livewire(PostForm::class, ['mode' => $mode->value])
-        ->assertSchemaComponentExists('en::data::tab', checkComponentUsing: fn (Tab $tab): bool => $tab->getLocale() === 'en')
-        ->assertSchemaComponentExists('pl::data::tab', checkComponentUsing: fn (Tab $tab): bool => $tab->getLocale() === 'pl');
+        ->assertSchemaComponentExists('translations::en::data::tab', checkComponentUsing: fn (Tab $tab): bool => $tab->getLocale() === 'en')
+        ->assertSchemaComponentExists('translations::pl::data::tab', checkComponentUsing: fn (Tab $tab): bool => $tab->getLocale() === 'pl');
 })->with('drivers');
 
 it('creates a localized field per locale named by the driver', function (TranslationMode $mode): void {
@@ -72,10 +72,10 @@ it('registers actions on every locale tab and passes the locale', function (): v
     ];
 
     $component = livewire(SchemaForm::class)
-        ->assertSchemaComponentExists('en::data::tab', checkComponentUsing: fn (Tab $tab): bool => array_key_exists('fillTitle', $tab->getActions()))
-        ->assertSchemaComponentExists('pl::data::tab', checkComponentUsing: fn (Tab $tab): bool => array_key_exists('fillTitle', $tab->getActions()));
+        ->assertSchemaComponentExists('translations::en::data::tab', checkComponentUsing: fn (Tab $tab): bool => array_key_exists('fillTitle', $tab->getActions()))
+        ->assertSchemaComponentExists('translations::pl::data::tab', checkComponentUsing: fn (Tab $tab): bool => array_key_exists('fillTitle', $tab->getActions()));
 
-    $component->callAction(TestAction::make('fillTitle')->schemaComponent('pl::data::tab', schema: 'form')->arguments(['locale' => 'pl']));
+    $component->callAction(TestAction::make('fillTitle')->schemaComponent('translations::pl::data::tab', schema: 'form')->arguments(['locale' => 'pl']));
 
     expect($component->get('actionCalls'))->toBe([['action' => 'fillTitle', 'locale' => 'pl']]);
 });

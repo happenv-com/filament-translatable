@@ -2,6 +2,9 @@
 
 namespace Happenv\FilamentTranslatable\Forms\Component\Translations;
 
+use Happenv\FilamentTranslatable\Forms\Component\Translations;
+use Illuminate\Support\Str;
+
 class Tab extends \Filament\Schemas\Components\Tabs\Tab
 {
     /**
@@ -16,10 +19,15 @@ class Tab extends \Filament\Schemas\Components\Tabs\Tab
     {
         parent::setUp();
 
+        // Prefixed with the owning Translations component, so several components can share locales.
         $this->key(function (Tab $component): string {
+            $translations = $component->getContainer()->getParentComponent();
+            $prefix = ($translations instanceof Translations)
+                ? Str::slug(Str::transliterate((string) $translations->getLabel(), strict: true))
+                : null;
             $statePath = $component->getStatePath();
 
-            return $component->getLocale() . '::' . (filled($statePath) ? "{$statePath}::tab" : 'tab');
+            return (filled($prefix) ? "{$prefix}::" : '') . $component->getLocale() . '::' . (filled($statePath) ? "{$statePath}::tab" : 'tab');
         }, isInheritable: false);
     }
 

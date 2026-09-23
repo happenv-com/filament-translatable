@@ -218,7 +218,7 @@ class Translations extends Tabs
             $position = 1;
 
             foreach ($this->getChildSchemas() as $schema) {
-                if (Arr::first($schema->getComponents())?->getId() === $queryStringTab) {
+                if (Arr::first($schema->getComponents())?->getKey(isAbsolute: false) === $queryStringTab) {
                     return $position;
                 }
 
@@ -229,15 +229,18 @@ class Translations extends Tabs
         return $this->evaluate($this->activeTab);
     }
 
+    /**
+     * Filament calls this before hydrating child fields, so casts and hooks see the loaded values.
+     */
     #[\Override]
-    public function callAfterStateHydrated(): static
+    public function loadStateFromRelationships(bool $shouldHydrate = false): void
     {
-        parent::callAfterStateHydrated();
+        parent::loadStateFromRelationships($shouldHydrate);
 
-        $record = $this->getRecord();
+        $record = $this->getOwningRecord();
 
-        if (! $record instanceof Model) {
-            return $this;
+        if (! $record) {
+            return;
         }
 
         $driver = $this->getTranslationDriver();
@@ -251,11 +254,48 @@ class Translations extends Tabs
                     continue;
                 }
 
-                $field->state($driver->getTranslationFromRecord($record, $attribute, $locale));
+                $field->rawState($driver->getTranslationFromRecord($record, $attribute, $locale));
             }
         }
+    }
 
-        return $this;
+    /**
+     * The record that owns this component's state level. Stops at state path boundaries
+     * (e.g. JSON repeater items), so a parent record is never read for nested data.
+     */
+    protected function getOwningRecord(): ?Model
+    {
+        $schema = $this->getContainer();
+
+        while (true) {
+            $record = $schema->getRecord(withParentComponentRecord: false);
+
+            if ($record instanceof Model) {
+                return $record;
+            }
+
+            if (($record !== null) || filled($schema->getStatePath(isAbsolute: false))) {
+                return null;
+            }
+
+            $component = $schema->getParentComponent();
+
+            if (! $component) {
+                return null;
+            }
+
+            $record = $component->getRecord(withContainerRecord: false);
+
+            if ($record instanceof Model) {
+                return $record;
+            }
+
+            if (($record !== null) || filled($component->getStatePath(isAbsolute: false))) {
+                return null;
+            }
+
+            $schema = $component->getContainer();
+        }
     }
 
     protected function prepareLocaleComponent(Component | Htmlable | string $component, Locale $locale): Component | Htmlable | string

@@ -21,7 +21,7 @@
 - `preformLocaleLabelUsing()` is deprecated — use `formatLocaleLabelUsing()`.
 - In all closures of the package `$locale` is now the locale **code** (`string`). In 4.x, `fieldTranslatableLabel()`, `prefixLocaleLabel()`, `suffixLocaleLabel()` and `preformLocaleLabelUsing()` received a `Locale` object.
 - Field labels with a locale prefix/suffix are plain strings (no `HtmlString`), and locale labels are HTML-escaped.
-- Tab keys are built from the locale code (e.g. `en::data::tab`) instead of the label.
+- Tab keys are built from the component name and the locale code (e.g. `translations::en::data::tab`) instead of the label, so several `Translations` components in one form get distinct tabs and actions.
 - Only `Field` components are translated; other components inside the schema are traversed for nested fields.
 
 ### Field macros

@@ -1,5 +1,6 @@
 @php
     $id = $getId();
+    $key = $getKey(isAbsolute: false);
     $isContained = $getContainer()
         ->getParentComponent()
         ->isContained();
@@ -22,10 +23,10 @@
 
 <div
     x-bind:class="{
-        @js($activeTabClasses): tab === @js($id),
-        @js($inactiveTabClasses): tab !== @js($id),
+        @js($activeTabClasses): tab === @js($key),
+        @js($inactiveTabClasses): tab !== @js($key),
     }"
-    x-on:expand="tab = @js($id)"
+    x-on:expand="tab = @js($key)"
     {{
         $attributes
             ->merge(

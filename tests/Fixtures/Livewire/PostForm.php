@@ -27,6 +27,9 @@ class PostForm extends Component implements HasActions, HasSchemas
     /** @var (Closure(Translations): mixed)|null */
     public static ?Closure $configureTranslationsUsing = null;
 
+    /** @var (Closure(Translations): array<mixed>)|null  replaces the default [author, translations] components */
+    public static ?Closure $componentsUsing = null;
+
     /** @var array<string, mixed>|null */
     public ?array $data = [];
 
@@ -75,7 +78,7 @@ class PostForm extends Component implements HasActions, HasSchemas
         }
 
         return $schema
-            ->components([
+            ->components(static::$componentsUsing ? (static::$componentsUsing)($translations) : [
                 TextInput::make('author'),
                 $translations,
             ])

@@ -95,6 +95,7 @@ abstract class TestCase extends Orchestra
 
         SchemaForm::$componentsUsing = null;
         PostForm::$configureTranslationsUsing = null;
+        PostForm::$componentsUsing = null;
 
         parent::tearDown();
     }

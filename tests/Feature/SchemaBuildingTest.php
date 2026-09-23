@@ -55,8 +55,8 @@ it('keys tabs by locale code even with labels and flags', function (): void {
         ->displayFlagsInLocaleLabels());
 
     livewire(SchemaForm::class)
-        ->assertSchemaComponentExists('en::data::tab')
-        ->assertSchemaComponentExists('pt-BR::data::tab')
+        ->assertSchemaComponentExists('translations::en::data::tab')
+        ->assertSchemaComponentExists('translations::pt-BR::data::tab')
         ->assertSchemaComponentExists('title.pt-BR');
 });
 

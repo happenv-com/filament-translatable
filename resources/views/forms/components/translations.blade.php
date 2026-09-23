@@ -110,7 +110,7 @@
                             <div
                                 class="fi-ac flex flex-auto"
                                 x-bind:class="{
-                                    'hidden': tab !== @js($tab->getId()),
+                                    'hidden': tab !== @js($tab->getKey(isAbsolute: false)),
                                 }"
                             >
                                 @foreach ($actions as $action)
@@ -131,7 +131,7 @@
                     <div
                         class="fi-ac justify-end pe-6 pt-6"
                         x-bind:class="{
-                            'hidden': tab !== @js($tab->getId()),
+                            'hidden': tab !== @js($tab->getKey(isAbsolute: false)),
                         }"
                     >
                         @foreach ($actions as $action)
