@@ -35,28 +35,24 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
         );
 
         Field::macro('requiredLocale', function (string $locale, bool | Closure $condition = true): Field {
-            /** @var Field $this */
             FieldTranslationSettings::addRequiredLocale($this, $locale, $condition);
 
             return $this;
         });
 
         Field::macro('requiredDefaultLocale', function (bool | Closure $condition = true): Field {
-            /** @var Field $this */
             FieldTranslationSettings::setRequiredDefaultLocale($this, $condition);
 
             return $this;
         });
 
         Field::macro('decorateTranslationField', function (string $locale, Closure $decorator): Field {
-            /** @var Field $this */
             FieldTranslationSettings::addDecorator($this, $locale, $decorator);
 
             return $this;
         });
 
         Field::macro('translatable', function (bool $condition = true, array | Closure | null $locales = null, ?Closure $configureUsing = null): Translations | Field {
-            /** @var Field $this */
             if (! $condition) {
                 return $this;
             }

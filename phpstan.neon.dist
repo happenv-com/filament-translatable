@@ -5,6 +5,9 @@ includes:
 parameters:
     level: 6
 
+    stubFiles:
+        - phpstan/stubs/Macroable.stub
+
     viewDirectories:
         - resources/views
 

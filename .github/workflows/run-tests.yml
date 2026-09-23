@@ -2,27 +2,29 @@ name: "Run Tests"
 
 on:
   push:
-    branches: [v3]
+    branches: [5.x, 4.x]
   pull_request:
-    branches: [v3]
+    branches: [5.x, 4.x]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         php: [8.5, 8.4, 8.3]
-        laravel: [12.*]
+        # Filament releases before 4.13.3 / 5.8.3 do not bind Livewire's DataStore as a singleton,
+        # which breaks rendering schemas in Livewire tests (filamentphp/filament#20515).
+        filament: ['^4.13.3', '^5.8.3']
         stability: [prefer-lowest, prefer-stable]
-        include:
-          - laravel: 12.*
-            testbench: 10.*
-            carbon: 3.*
-            collision: 8.*
+        # The lowest dependencies predate PHP 8.4/8.5 and emit deprecations there.
+        exclude:
+          - php: 8.5
+            stability: prefer-lowest
+          - php: 8.4
+            stability: prefer-lowest
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - F${{ matrix.filament }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -32,7 +34,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, fileinfo
           coverage: none
 
       - name: Setup problem matchers
@@ -42,8 +44,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.carbon }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer require "filament/filament:${{ matrix.filament }}" --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction --with-all-dependencies
 
       - name: List Installed Dependencies
         run: composer show -D

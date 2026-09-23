@@ -15,7 +15,7 @@ final class SpatieDriver implements TranslationDriver
 
     public function getTranslationFromRecord(Model $record, string $attribute, string $locale): mixed
     {
-        if (method_exists($record, 'isTranslatableAttribute') && $record->isTranslatableAttribute($attribute)) {
+        if (method_exists($record, 'getTranslation') && method_exists($record, 'isTranslatableAttribute') && $record->isTranslatableAttribute($attribute)) {
             $value = $record->getTranslation($attribute, $locale, false);
 
             return $value === '' ? null : $value;

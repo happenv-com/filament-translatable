@@ -1,0 +1,13 @@
+<?php
+
+namespace Filament\Support\Concerns;
+
+trait Macroable
+{
+    /**
+     * Filament's trait lacks Laravel's annotation that binds `$this` inside macros.
+     *
+     * @param-closure-this static $macro
+     */
+    public static function macro(string $name, callable $macro): void {}
+}

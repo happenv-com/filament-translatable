@@ -5,6 +5,7 @@ namespace Happenv\FilamentTranslatable\Tests;
 use Astrotomic\Translatable\TranslatableServiceProvider;
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
+use ErrorException;
 use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
@@ -55,8 +56,16 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
-        // Laravel only logs deprecations; make them fail the test instead.
-        $this->withoutDeprecationHandling();
+        // Laravel only logs deprecations; fail the test when the package itself triggers one.
+        $sourcePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR;
+
+        $previousHandler = set_error_handler(function (int $level, string $message, string $file = '', int $line = 0) use (&$previousHandler, $sourcePath): bool {
+            if (in_array($level, [E_DEPRECATED, E_USER_DEPRECATED], true) && str_starts_with($file, $sourcePath)) {
+                throw new ErrorException($message, 0, $level, $file, $line);
+            }
+
+            return $previousHandler ? (bool) $previousHandler($level, $message, $file, $line) : false;
+        });
     }
 
     protected function defineEnvironment($app): void
@@ -82,6 +91,8 @@ abstract class TestCase extends Orchestra
 
     protected function tearDown(): void
     {
+        restore_error_handler();
+
         SchemaForm::$componentsUsing = null;
         PostForm::$configureTranslationsUsing = null;
 
