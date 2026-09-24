@@ -64,8 +64,8 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
                 $translations->locales($locales);
             }
 
-            if ($configureUsing !== null) {
-                $translations = $configureUsing($translations) ?? $translations;
+            if ($configureUsing instanceof Closure) {
+                return $configureUsing($translations) ?? $translations;
             }
 
             return $translations;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Happenv\FilamentTranslatable\Tests\Fixtures\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;

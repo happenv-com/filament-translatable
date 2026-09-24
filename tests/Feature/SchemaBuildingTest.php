@@ -22,7 +22,7 @@ function translationsWith(Closure $configure): void
 }
 
 it('caches the per-locale schemas', function (): void {
-    translationsWith(fn (Translations $t) => $t);
+    translationsWith(fn (Translations $t): Translations => $t);
 
     livewire(SchemaForm::class)
         ->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: function (Translations $t): bool {
@@ -50,7 +50,7 @@ it('passes the locale code to a schema closure', function (): void {
 });
 
 it('keys tabs by locale code even with labels and flags', function (): void {
-    translationsWith(fn (Translations $t) => $t
+    translationsWith(fn (Translations $t): Translations => $t
         ->locales(['en' => 'English', 'pt-BR' => 'Português'])
         ->displayFlagsInLocaleLabels());
 
@@ -74,7 +74,7 @@ it('supports two translations components in one form', function (): void {
 });
 
 it('escapes locale labels and flag alt text', function (): void {
-    translationsWith(fn (Translations $t) => $t
+    translationsWith(fn (Translations $t): Translations => $t
         ->locales(['en' => '<script>alert(1)</script>'])
         ->displayFlagsInLocaleLabels());
 
@@ -102,7 +102,7 @@ it('does not render field labels as HTML when adding locale prefixes', function 
 });
 
 it('formats locale labels with a callback receiving the code and label', function (): void {
-    translationsWith(fn (Translations $t) => $t
+    translationsWith(fn (Translations $t): Translations => $t
         ->locales(['en' => 'English', 'pl' => 'Polski'])
         ->suffixLocaleLabel()
         ->formatLocaleLabelUsing(fn (string $locale, string $label): string => "[{$locale}|{$label}]"));
@@ -112,7 +112,7 @@ it('formats locale labels with a callback receiving the code and label', functio
 });
 
 it('keeps the deprecated preformLocaleLabelUsing alias', function (): void {
-    translationsWith(fn (Translations $t) => $t
+    translationsWith(fn (Translations $t): Translations => $t
         ->prefixLocaleLabel()
         ->preformLocaleLabelUsing(fn (string $label): string => "<{$label}>"));
 
@@ -121,7 +121,7 @@ it('keeps the deprecated preformLocaleLabelUsing alias', function (): void {
 });
 
 it('uses a per-locale field label callback receiving the code', function (): void {
-    translationsWith(fn (Translations $t) => $t
+    translationsWith(fn (Translations $t): Translations => $t
         ->fieldTranslatableLabel(fn (Field $field, string $locale): string => "{$field->getName()}-{$locale}"));
 
     livewire(SchemaForm::class)

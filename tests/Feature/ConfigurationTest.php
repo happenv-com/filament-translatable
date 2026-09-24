@@ -30,7 +30,7 @@ function assertTranslations(Closure $assert): void
 }
 
 it('works without any panel using safe defaults', function (): void {
-    Filament::setCurrentPanel(null);
+    filament()->setCurrentPanel(null);
     bareTranslations();
 
     assertTranslations(function (Translations $t): void {
@@ -47,7 +47,9 @@ it('works in a panel that has no plugin registered', function (): void {
     Filament::setCurrentPanel('bare');
     bareTranslations();
 
-    assertTranslations(fn (Translations $t) => expect(array_keys($t->getLocales()))->toBe(['en']));
+    assertTranslations(function (Translations $t): void {
+        expect(array_keys($t->getLocales()))->toBe(['en']);
+    });
 });
 
 it('does not expose a plugin outside of its panel', function (): void {
@@ -79,8 +81,10 @@ it('lets configureUsing override the plugin', function (): void {
     bareTranslations();
 
     Translations::configureUsing(
-        fn (Translations $t) => $t->locales(['de', 'fr']),
-        during: fn () => assertTranslations(fn (Translations $t) => expect(array_keys($t->getLocales()))->toBe(['de', 'fr'])),
+        fn (Translations $t): Translations => $t->locales(['de', 'fr']),
+        during: fn () => assertTranslations(function (Translations $t): void {
+            expect(array_keys($t->getLocales()))->toBe(['de', 'fr']);
+        }),
     );
 });
 
@@ -91,13 +95,15 @@ it('lets the instance override configureUsing', function (): void {
     ];
 
     Translations::configureUsing(
-        fn (Translations $t) => $t->locales(['de']),
-        during: fn () => assertTranslations(fn (Translations $t) => expect(array_keys($t->getLocales()))->toBe(['fr'])),
+        fn (Translations $t): Translations => $t->locales(['de']),
+        during: fn () => assertTranslations(function (Translations $t): void {
+            expect(array_keys($t->getLocales()))->toBe(['fr']);
+        }),
     );
 });
 
 it('accepts closures for every option', function (): void {
-    Filament::setCurrentPanel(null);
+    filament()->setCurrentPanel(null);
     SchemaForm::$componentsUsing = fn (): array => [
         Translations::make('translations')
             ->locales(fn (): array => ['en' => 'English', 'pl' => 'Polski'])

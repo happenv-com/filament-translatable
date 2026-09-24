@@ -19,7 +19,7 @@ it('shows tab panels under the same key the tab buttons select', function (): vo
     SchemaForm::$componentsUsing = fn (): array => [
         Translations::make('translations')
             ->locales(['en', 'pl'])
-            ->actions([Action::make('fill')->action(fn () => null)])
+            ->actions([Action::make('fill')->action(fn (): null => null)])
             ->schema([TextInput::make('title')]),
     ];
 
@@ -49,7 +49,7 @@ it('shows tab panels under the same key the tab buttons select', function (): vo
 it('loads casted field types from the record', function (TranslationMode $mode): void {
     $record = Posts::create($mode, ['title' => ['en' => '1'], 'content' => ['en' => 'a,b']]);
 
-    PostForm::$configureTranslationsUsing = fn (Translations $t) => $t->schema([
+    PostForm::$configureTranslationsUsing = fn (Translations $t): Translations => $t->schema([
         Toggle::make('title'),
         TagsInput::make('content')->separator(','),
     ]);
@@ -87,10 +87,10 @@ it('does not load translations of the page record into JSON repeater items', fun
 it('gives tabs of two translations components distinct keys and actions', function (): void {
     SchemaForm::$componentsUsing = fn (): array => [
         Translations::make('main')->locales(['en', 'pl'])
-            ->actions([Action::make('act')->action(fn (SchemaForm $livewire) => $livewire->actionCalls[] = ['action' => 'main', 'locale' => null])])
+            ->actions([Action::make('act')->action(fn (SchemaForm $livewire): array => $livewire->actionCalls[] = ['action' => 'main', 'locale' => null])])
             ->schema([TextInput::make('title')]),
         Translations::make('seo')->locales(['en', 'pl'])
-            ->actions([Action::make('act')->action(fn (SchemaForm $livewire) => $livewire->actionCalls[] = ['action' => 'seo', 'locale' => null])])
+            ->actions([Action::make('act')->action(fn (SchemaForm $livewire): array => $livewire->actionCalls[] = ['action' => 'seo', 'locale' => null])])
             ->schema([TextInput::make('meta')]),
     ];
 

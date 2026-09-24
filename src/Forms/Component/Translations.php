@@ -239,7 +239,7 @@ class Translations extends Tabs
 
         $record = $this->getOwningRecord();
 
-        if (! $record) {
+        if (! $record instanceof Model) {
             return;
         }
 
@@ -280,7 +280,7 @@ class Translations extends Tabs
 
             $component = $schema->getParentComponent();
 
-            if (! $component) {
+            if (! $component instanceof Component) {
                 return null;
             }
 
@@ -405,7 +405,7 @@ class Translations extends Tabs
     {
         $withName = $this->hasNamesInLocaleLabels();
 
-        if (! ($withFlag && $this->hasFlagsInLocaleLabels())) {
+        if (! $withFlag || ! $this->hasFlagsInLocaleLabels()) {
             return $withName ? $locale->label : $locale->code;
         }
 

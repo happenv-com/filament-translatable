@@ -64,7 +64,7 @@ abstract class TestCase extends Orchestra
                 throw new ErrorException($message, 0, $level, $file, $line);
             }
 
-            return $previousHandler ? (bool) $previousHandler($level, $message, $file, $line) : false;
+            return $previousHandler && (bool) $previousHandler($level, $message, $file, $line);
         });
     }
 

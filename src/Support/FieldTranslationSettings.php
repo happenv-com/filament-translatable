@@ -14,7 +14,7 @@ use Filament\Forms\Components\Field;
  */
 final class FieldTranslationSettings
 {
-    public const META_KEY = 'filament-translatable';
+    public const string META_KEY = 'filament-translatable';
 
     public static function addRequiredLocale(Field $field, string $locale, bool | Closure $condition): void
     {

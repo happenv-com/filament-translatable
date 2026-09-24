@@ -36,7 +36,7 @@ it('fills and reads localized state', function (TranslationMode $mode): void {
 })->with('drivers');
 
 it('keeps excluded fields untranslated', function (TranslationMode $mode): void {
-    PostForm::$configureTranslationsUsing = fn (Translations $t) => $t->exclude(['content']);
+    PostForm::$configureTranslationsUsing = fn (Translations $t): Translations => $t->exclude(['content']);
 
     $component = livewire(PostForm::class, ['mode' => $mode->value])
         ->fillForm(Posts::formData($mode, ['title' => ['en' => 'Hello']], ['content' => 'Plain']));
@@ -47,7 +47,7 @@ it('keeps excluded fields untranslated', function (TranslationMode $mode): void 
 })->with('drivers');
 
 it('translates only included fields', function (TranslationMode $mode): void {
-    PostForm::$configureTranslationsUsing = fn (Translations $t) => $t->include(['title']);
+    PostForm::$configureTranslationsUsing = fn (Translations $t): Translations => $t->include(['title']);
 
     $component = livewire(PostForm::class, ['mode' => $mode->value])
         ->fillForm(Posts::formData($mode, ['title' => ['en' => 'Hello']], ['content' => 'Plain']));
@@ -81,14 +81,14 @@ it('registers actions on every locale tab and passes the locale', function (): v
 });
 
 it('supports vertical tabs', function (): void {
-    PostForm::$configureTranslationsUsing = fn (Translations $t) => $t->vertical();
+    PostForm::$configureTranslationsUsing = fn (Translations $t): Translations => $t->vertical();
 
     livewire(PostForm::class)
         ->assertSchemaComponentExists('translations::data::tabs', checkComponentUsing: fn (Translations $t): bool => $t->isVertical());
 });
 
 it('exposes display options', function (): void {
-    PostForm::$configureTranslationsUsing = fn (Translations $t) => $t
+    PostForm::$configureTranslationsUsing = fn (Translations $t): Translations => $t
         ->displayFlagsInLocaleLabels()
         ->displayNamesInLocaleLabels(false)
         ->flagWidth('48px');

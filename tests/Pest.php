@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\Tests\TestCase;
 
