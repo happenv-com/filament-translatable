@@ -591,7 +591,7 @@ composer test
 
 ## Changelog
 
-See the [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+See [GitHub Releases](https://github.com/happenv-com/filament-translatable/releases) for what has changed in each version, and [UPGRADING.md](UPGRADING.md) for breaking changes between major versions.
 
 ## Contributing
 
