@@ -11,10 +11,10 @@
     },
     "devDependencies": {
         "@awcodes/filament-plugin-purge": "^1.1.1",
-        "@tailwindcss/cli": "^4.1.11",
-        "prettier": "^3.7.4",
+        "@tailwindcss/cli": "^4.3.3",
+        "prettier": "^3.9.7",
         "prettier-plugin-blade": "^2.1.21",
-        "prettier-plugin-tailwindcss": "^0.7.2",
+        "prettier-plugin-tailwindcss": "^0.8.1",
         "tailwindcss": "^4.1.11"
     }
 }
