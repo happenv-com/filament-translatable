@@ -1,9 +1,6 @@
 # Filament Translatable
 
 <p align="center" class="flex items-center justify-center">
-    <a href="https://filamentphp.com/docs/3.x/introduction/overview">
-        <img alt="FILAMENT 3.x" src="https://img.shields.io/badge/FILAMENT-3.x-EBB304?style=for-the-badge">
-    </a>
     <a href="https://filamentphp.com/docs/4.x/introduction/overview">
         <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
     </a>
@@ -49,11 +46,12 @@
 
 ## Installation
 
-| Filament Version | Filament Translatable Version |
-| ---------------- | ----------------------------- |
-| 3.x              | 2.x (old namespace)           |
-| 4.x              | 5.x (4.x maintenance)         |
-| 5.x              | 5.x (4.x maintenance)         |
+| Filament Version | Filament Translatable Version     |
+| ---------------- | --------------------------------- |
+| 4.x              | 5.x (current), 4.x (maintenance)  |
+| 5.x              | 5.x (current), 4.x (maintenance)  |
+
+Filament 3 is not supported by any version of this package.
 
 Upgrading from 4.x? See [UPGRADING.md](UPGRADING.md).
 
