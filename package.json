@@ -13,7 +13,7 @@
         "@awcodes/filament-plugin-purge": "^1.1.1",
         "@tailwindcss/cli": "^4.1.11",
         "prettier": "^3.7.4",
-        "prettier-plugin-blade": "^2.1.21",
+        "prettier-plugin-blade": "^3.3.3",
         "prettier-plugin-tailwindcss": "^0.7.2",
         "tailwindcss": "^4.1.11"
     }
