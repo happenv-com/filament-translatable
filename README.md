@@ -46,10 +46,10 @@
 
 ## Installation
 
-| Filament Version | Filament Translatable Version     |
-| ---------------- | --------------------------------- |
-| 4.x              | 5.x (current), 4.x (maintenance)  |
-| 5.x              | 5.x (current), 4.x (maintenance)  |
+| Filament Version | Filament Translatable Version    |
+| ---------------- | -------------------------------- |
+| 4.x              | 5.x (current), 4.x (maintenance) |
+| 5.x              | 5.x (current), 4.x (maintenance) |
 
 Filament 3 is not supported by any version of this package.
 

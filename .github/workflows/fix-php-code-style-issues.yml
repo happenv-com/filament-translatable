@@ -2,8 +2,15 @@ name: 'Fix PHP Code Styling'
 
 on:
   push:
+    # Branches only: on tag pushes the checkout is detached and fixes cannot be committed back.
+    branches:
+      - '**'
     paths:
       - '**.php'
+      - '**.md'
+      - '**.js'
+      - '**.css'
+      - '**.json'
 
 permissions:
   contents: write
