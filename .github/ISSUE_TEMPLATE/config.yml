@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security issue
+    url: https://github.com/happenv-com/filament-translatable/security/policy
+    about: Please do not report security vulnerabilities in public issues.

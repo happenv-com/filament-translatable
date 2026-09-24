@@ -1,6 +1,7 @@
 {
     "name": "happenv-com/filament-translatable",
     "description": "Highly customizable Translation component for Filament PHP.",
+    "license": "MIT",
     "keywords": [
         "php",
         "webard",
@@ -16,43 +17,52 @@
         "filament-translatable",
         "filament-translate-field"
     ],
-    "homepage": "https://github.com/happenv-com/filament-translatable",
-    "support": {
-        "issues": "https://github.com/happenv-com/filament-translatable/issues",
-        "source": "https://github.com/happenv-com/filament-translatable"
-    },
-    "license": "MIT",
     "authors": [
-        {
-            "name": "Bartlomiej Gajda",
-            "email": "code@webard.me",
-            "role": "Developer"
-        },
         {
             "name": "Happenv sp. z o.o.",
             "email": "code@happenv.com",
+            "homepage": "https://happenv.com",
+            "role": "Maintainer"
+        },
+        {
+            "name": "webard",
+            "email": "code@webard.me",
+            "homepage": "https://github.com/webard",
             "role": "Developer"
         }
     ],
-    "suggest": {
-        "spatie/laravel-translatable": "For handling translations in Laravel using JSON fields.",
-        "astrotomic/laravel-translatable": "Alternative way for handling translations in Laravel using separate database tables."
+    "homepage": "https://github.com/happenv-com/filament-translatable",
+    "support": {
+        "issues": "https://github.com/happenv-com/filament-translatable/issues",
+        "source": "https://github.com/happenv-com/filament-translatable",
+        "security": "https://github.com/happenv-com/filament-translatable/security/policy"
     },
     "require": {
         "php": "^8.3",
-        "filament/filament": "^4.3.1|^5.0"
+        "filament/filament": "^4.3.1 || ^5.0"
     },
     "require-dev": {
         "astrotomic/laravel-translatable": "^11.16",
         "driftingly/rector-laravel": "^2.1",
+        "ergebnis/composer-normalize": "^2.48",
         "larastan/larastan": "^3.0",
-        "laravel/pint": "^1.0",
-        "orchestra/testbench": "^9.16|^10.0",
-        "pestphp/pest": "^4.2",
-        "pestphp/pest-plugin-laravel": "^4.0",
-        "pestphp/pest-plugin-livewire": "^4.0",
+        "laravel/pint": "^1.24",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "pestphp/pest": "^4.2 || ^5.0",
+        "pestphp/pest-plugin-arch": "^4.0 || ^5.0",
+        "pestphp/pest-plugin-laravel": "^4.0 || ^5.0",
+        "pestphp/pest-plugin-livewire": "^4.0 || ^5.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "rector/rector": "^2.1",
         "spatie/laravel-translatable": "^6.12"
     },
+    "suggest": {
+        "astrotomic/laravel-translatable": "Alternative way for handling translations in Laravel using separate database tables.",
+        "spatie/laravel-translatable": "For handling translations in Laravel using JSON fields."
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Happenv\\FilamentTranslatable\\": "src/"
@@ -63,19 +73,13 @@
             "Happenv\\FilamentTranslatable\\Tests\\": "tests/"
         }
     },
-    "scripts": {
-        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint"
-    },
     "config": {
-        "sort-packages": true,
         "allow-plugins": {
+            "ergebnis/composer-normalize": true,
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
-        }
+        },
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
@@ -87,6 +91,41 @@
             ]
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "ci": [
+            "@normalize-composer-test",
+            "@rector-test",
+            "@pint-test",
+            "@phpstan",
+            "@test"
+        ],
+        "cs": [
+            "@normalize-composer",
+            "@rector",
+            "@pint"
+        ],
+        "normalize-composer": "@composer normalize --ansi",
+        "normalize-composer-test": "@composer normalize --dry-run --ansi",
+        "phpstan": "phpstan analyse --ansi",
+        "pint": "pint",
+        "pint-test": "pint --test",
+        "rector": "rector process",
+        "rector-test": "rector process --dry-run",
+        "test": "pest --testsuite=Unit,Feature",
+        "test-coverage": "pest --testsuite=Unit,Feature --coverage"
+    },
+    "scripts-descriptions": {
+        "ci": "Runs every CI gate locally: composer.json normalization, Rector, Pint, PHPStan and the test suite.",
+        "cs": "Fixes code style: composer normalize, Rector, then Pint (Rector adds imports, Pint sorts them).",
+        "normalize-composer": "Normalizes composer.json.",
+        "normalize-composer-test": "Checks composer.json is normalized.",
+        "phpstan": "Runs PHPStan.",
+        "pint": "Formats the code with Pint.",
+        "pint-test": "Checks the code style with Pint.",
+        "rector": "Applies Rector refactorings.",
+        "rector-test": "Shows pending Rector refactorings.",
+        "test": "Runs the unit and feature tests.",
+        "test-coverage": "Runs the unit and feature tests with code coverage (needs pcov or Xdebug)."
+    }
 }

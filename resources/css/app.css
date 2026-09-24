@@ -1,5 +1,14 @@
 @reference "tailwindcss";
-@tailwind utilities;
+
+/*
+ * Only the package's own views and PHP classes are scanned for utilities, so
+ * the build does not depend on whatever else lies in the repository
+ * (README, docs, untracked files). `npm run build` must reproduce
+ * resources/dist byte for byte, which assets.yml checks.
+ */
+@tailwind utilities source(none);
+@source '../views';
+@source '../../src';
 
 /* Safelist classes to ensure they are always included */
 .h-0 {

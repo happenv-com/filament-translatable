@@ -1,32 +1,106 @@
 name: 'Dependabot Auto-Merge'
 
+# Merges Dependabot PRs with a minor or patch bump — but only once every OTHER
+# check on the PR has passed. Major bumps are left for a human.
+#
+# Why it waits by itself instead of `gh pr merge --auto`: `--auto` waits only
+# for the checks REQUIRED by branch protection. A branch with no required checks
+# (the default, and the only option on a private repository without a paid
+# plan) gets merged at once, before CI has said anything. Waiting here works
+# the same with or without branch protection, and a plain `gh pr merge` does
+# not need the "Allow auto-merge" repository setting either.
+#
+# Cost: the job holds a runner for as long as CI on the PR takes.
+#
+# `pull_request_target`: the only trigger that gives a Dependabot PR a token
+# that can merge. Nothing from the PR is checked out or executed — the job only
+# calls `gh`. The zizmor exceptions for this file live in .github/zizmor.yml.
 on: pull_request_target
 
-permissions:
-  pull-requests: write
-  contents: write
+# Nothing is needed at the workflow scope; the writes live on the single job below.
+permissions: {}
+
+# One merge attempt per PR at a time; never cancel a merge already in flight.
+# A newer push is handled by the head-SHA check inside the loop instead.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
 
 jobs:
   dependabot:
+    name: dependabot
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     if: ${{ github.actor == 'dependabot[bot]' }}
+    permissions:
+      contents: write # land the squash commit
+      pull-requests: write # merge the Dependabot PR
+      checks: read # read the check runs the merge waits for
+      statuses: read # and the commit statuses
+
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v3.1.0
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: Auto-merge Dependabot PRs for semver-minor updates
-        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-minor'}}
-        run: gh pr merge --auto --merge "$PR_URL"
+      - name: Wait for every other check to pass, then merge
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch' }}
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          SELF_WORKFLOW: ${{ github.workflow }}
+        run: |
+          set -euo pipefail
 
-      - name: Auto-merge Dependabot PRs for semver-patch updates
-        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
-        run: gh pr merge --auto --merge "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          # Checks for a fresh push register a little after this job starts. An
+          # empty list is "not yet", not "nothing to wait for": merging on no
+          # evidence is exactly what this workflow exists to prevent.
+          grace_until=$((SECONDS + 180))
+          deadline=$((SECONDS + 50 * 60))
+
+          while :; do
+            current_head="$(gh pr view "$PR_URL" --json headRefOid --jq '.headRefOid')"
+            if [ "$current_head" != "$HEAD_SHA" ]; then
+              echo "::notice::Dependabot pushed a newer commit; the run for that push takes over."
+              exit 0
+            fi
+
+            # `gh pr checks` exits non-zero while anything is pending or failed;
+            # the JSON is what gets read, not the exit code.
+            checks="$(gh pr checks "$PR_URL" --json name,bucket,workflow 2>/dev/null || true)"
+            others="$(printf '%s' "${checks:-[]}" | jq -c --arg self "$SELF_WORKFLOW" '[.[] | select(.workflow != $self)]')"
+
+            total="$(jq 'length' <<< "$others")"
+            failed="$(jq '[.[] | select(.bucket == "fail" or .bucket == "cancel")] | length' <<< "$others")"
+            pending="$(jq '[.[] | select(.bucket == "pending")] | length' <<< "$others")"
+
+            if [ "$failed" -gt 0 ]; then
+              echo "::error::Not merging: a check failed or was cancelled."
+              jq -r '.[] | select(.bucket == "fail" or .bucket == "cancel") | "  - \(.workflow) / \(.name): \(.bucket)"' <<< "$others"
+              exit 1
+            fi
+
+            if [ "$total" -gt 0 ] && [ "$pending" -eq 0 ]; then
+              break
+            fi
+
+            if [ "$total" -eq 0 ] && [ "$SECONDS" -ge "$grace_until" ]; then
+              echo "::error::Not merging: no checks ran on this PR, so nothing has vouched for it."
+              exit 1
+            fi
+
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "::error::Not merging: checks still pending after 50 minutes."
+              exit 1
+            fi
+
+            sleep 30
+          done
+
+          echo "All ${total} checks passed; merging."
+          # `--match-head-commit` refuses the merge if the head moved after the
+          # checks above were read — the checks vouched for THIS commit only.
+          gh pr merge "$PR_URL" --squash --match-head-commit "$HEAD_SHA"

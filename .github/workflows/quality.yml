@@ -1,0 +1,96 @@
+name: 'Quality'
+
+# Static gates in ONE job: each separate job would pay for its own PHP setup
+# and `composer update`, while the checks themselves take seconds.
+#
+# The gates only REPORT. Nothing here formats and commits on the author's
+# behalf — a job that does hides from the author that their editor does not,
+# and it needs a write token with persisted credentials to do it. The fix is
+# local: `composer cs`.
+#
+# Every gate runs with `!cancelled()` and a successful install, so one red gate
+# does not hide the others and a single run shows the full list. The job still
+# fails if any of them failed.
+
+on:
+  push:
+    branches:
+      - '*.x'
+      - main
+      - develop
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'pint.json'
+      - 'rector.php'
+      - '.github/workflows/quality.yml'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'pint.json'
+      - 'rector.php'
+      - '.github/workflows/quality.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-lock --ansi
+
+      - name: Install dependencies
+        id: install
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      # composer.json kept in canonical form (ergebnis/composer-normalize), so a
+      # diff shows the change rather than whoever last reordered keys by hand.
+      - name: Check composer.json is normalized
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: composer normalize --dry-run --ansi
+
+      # Rector before Pint, as in `composer cs`: Rector adds imports on top of
+      # the block, Pint sorts them.
+      - name: Run Rector
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: vendor/bin/rector process --dry-run --ansi --no-progress-bar
+
+      - name: Run Pint
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: vendor/bin/pint --test -v
+
+      # A class in the wrong file loads in development (the classmap finds it)
+      # and stops loading in an app with an optimized autoloader.
+      - name: Check PSR-4 compliance
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: composer dump-autoload --optimize --strict-psr

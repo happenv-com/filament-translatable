@@ -1,0 +1,112 @@
+name: 'Tests'
+
+# The Pest suite across the supported PHP / Laravel / Filament range.
+#
+# Libraries do not commit composer.lock, so every leg resolves its own
+# dependency set with `composer update`. `prefer-lowest` proves the lower
+# bounds in composer.json are real, `prefer-stable` proves the package works
+# with what a fresh install gets today.
+#
+# Browser tests run in browser-tests.yml, on one combination only.
+#
+# Supporting another Filament major: add it to `filament` and give it a
+# `filament-constraint` in `include`. Pin Pest the same way when a Filament
+# major needs an older Livewire than the newest Pest plugins allow (not needed
+# today: Composer picks Pest 4 for Filament 4 / Livewire 3 on its own).
+
+on:
+  push:
+    branches:
+      - '*.x'
+      - main
+      - develop
+    paths-ignore:
+      - '**.md'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths-ignore:
+      - '**.md'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - F${{ matrix.filament }} - ${{ matrix.stability }}
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+        laravel: ['12.*', '13.*']
+        filament: ['4', '5']
+        stability: [prefer-lowest, prefer-stable]
+        include:
+          - laravel: '12.*'
+            testbench: '10.*'
+          - laravel: '13.*'
+            testbench: '11.*'
+          # composer.json allows ^4.3.1 || ^5.0, but Filament releases before
+          # 4.13.3 / 5.8.3 do not bind Livewire's DataStore as a singleton,
+          # which breaks rendering schemas in Livewire tests
+          # (filamentphp/filament#20515).
+          - filament: '4'
+            filament-constraint: '^4.13.3'
+          - filament: '5'
+            filament-constraint: '^5.8.3'
+        exclude:
+          # The lowest dependency set predates PHP 8.4 / 8.5 and emits
+          # deprecations there.
+          - php: '8.4'
+            stability: prefer-lowest
+          - php: '8.5'
+            stability: prefer-lowest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, fileinfo
+          coverage: none
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${RUNNER_TOOL_CACHE}/php.json"
+          echo "::add-matcher::${RUNNER_TOOL_CACHE}/phpunit.json"
+
+      - name: Install dependencies
+        env:
+          LARAVEL: ${{ matrix.laravel }}
+          TESTBENCH: ${{ matrix.testbench }}
+          FILAMENT: ${{ matrix.filament-constraint }}
+          STABILITY: ${{ matrix.stability }}
+        run: |
+          composer require "laravel/framework:${LARAVEL}" "orchestra/testbench:${TESTBENCH}" --no-interaction --no-update
+          composer require "filament/filament:${FILAMENT}" --no-interaction --no-update
+          composer update "--${STABILITY}" --prefer-dist --no-interaction --no-progress --with-all-dependencies
+
+      - name: List installed dependencies
+        run: composer show -D
+
+      - name: Execute tests
+        run: vendor/bin/pest --ci --testsuite=Unit,Feature

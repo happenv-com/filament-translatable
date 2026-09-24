@@ -1,0 +1,57 @@
+name: 'Changelog'
+
+# Every published release lands in CHANGELOG.md: the release notes become a
+# new section on top, committed back to the branch the release was cut from.
+#
+# The release notes are the source — write them in the GitHub release (or use
+# "Generate release notes", grouped by .github/release.yml) and do NOT edit
+# CHANGELOG.md by hand for a release.
+
+on:
+  release:
+    types: [published]
+
+# A release event should update the changelog exactly once; never cancel a
+# push-back that is already in flight.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+# Least privilege at the workflow scope; the job below grants only what it needs.
+permissions: {}
+
+jobs:
+  update:
+    name: update
+    runs-on: ubuntu-latest
+    # A pre-release is not a version anyone should read about in the changelog.
+    if: ${{ !github.event.release.prerelease }}
+    timeout-minutes: 5
+    # Scoped to the single job that pushes the CHANGELOG commit back.
+    permissions:
+      contents: write # push the CHANGELOG commit back to the release branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The branch the release was cut from (1.x, 2.x, ...), not a
+          # hard-coded one: a package keeps one branch per major version.
+          ref: ${{ github.event.release.target_commitish }}
+          # This job pushes the CHANGELOG commit back, so the GITHUB_TOKEN must
+          # stay configured in git for git-auto-commit-action.
+          persist-credentials: true # zizmor: ignore[artipacked]
+
+      - name: Update CHANGELOG
+        uses: stefanzweifel/changelog-updater-action@a938690fad7edf25368f37e43a1ed1b34303eb36 # v1.12.0
+        with:
+          latest-version: ${{ github.event.release.tag_name }}
+          release-notes: ${{ github.event.release.body }}
+
+      - name: Commit updated CHANGELOG
+        # zizmor: ignore[superfluous-actions] deliberate: the dedicated action commits and pushes CHANGELOG.md with the persisted token
+        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
+        with:
+          branch: ${{ github.event.release.target_commitish }}
+          commit_message: 'docs: update CHANGELOG for ${{ github.event.release.tag_name }}'
+          file_pattern: CHANGELOG.md
