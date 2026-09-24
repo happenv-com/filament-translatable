@@ -1,0 +1,79 @@
+name: 'GitHub Actions Audit'
+
+on:
+  push:
+    branches:
+      - '*.x'
+      - main
+      - develop
+    paths:
+      - '.github/workflows/**'
+      - '.github/actions/**'
+      - '.github/dependabot.yml'
+      - '.github/zizmor.yml'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - '.github/workflows/**'
+      - '.github/actions/**'
+      - '.github/dependabot.yml'
+      - '.github/zizmor.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 5
+
+    steps:
+      # zizmor-action pulls the PUBLIC image ghcr.io/zizmorcore/zizmor via Docker.
+      # On self-hosted runners ~/.docker/config.json is SHARED across concurrent
+      # jobs, and a stale token left there by another job turns the anonymous pull
+      # into an authenticated one with dead credentials -> GHCR "denied". A per-run
+      # DOCKER_CONFIG gives this job a private, empty config, so the image always
+      # pulls anonymously. Harmless on GitHub-hosted runners.
+      - name: Use a private per-run docker config
+        run: echo "DOCKER_CONFIG=$RUNNER_TEMP/docker-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_ENV"
+
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        with:
+          # Pinned: the action defaults to `latest`, so a zizmor release would
+          # change this gate with no commit in the repository. Bump it on purpose,
+          # together with whatever the new version reports.
+          version: 1.29.0
+          # SARIF upload needs GitHub Advanced Security on private repositories;
+          # inline annotations work everywhere.
+          advanced-security: false
+          annotations: true
+
+      # Non-blocking early warning: the stricter `pedantic` findings as
+      # annotations, so drift is visible before it becomes a real finding.
+      - name: Run zizmor (pedantic, non-blocking)
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        continue-on-error: true
+        with:
+          version: 1.29.0
+          persona: pedantic
+          advanced-security: false
+          annotations: true

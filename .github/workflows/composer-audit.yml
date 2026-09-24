@@ -1,0 +1,66 @@
+name: 'Composer Audit'
+
+# Known vulnerabilities and abandoned packages in the dependency set a fresh
+# install resolves today. There is no composer.lock in a library, so the audit
+# resolves one first; the weekly cron catches advisories published while the
+# code did not change.
+
+on:
+  push:
+    branches:
+      - '*.x'
+      - main
+      - develop
+    paths:
+      - 'composer.json'
+      - '.github/workflows/composer-audit.yml'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - 'composer.json'
+      - '.github/workflows/composer-audit.yml'
+
+  schedule:
+    # Monday 06:00 UTC.
+    - cron: '0 6 * * 1'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      # `--no-audit`: the audit is the next step, reported in full there rather
+      # than as a warning at the end of the install.
+      - name: Resolve dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress --no-scripts --no-audit
+
+      - name: Run composer audit
+        run: composer audit --abandoned=report --ansi

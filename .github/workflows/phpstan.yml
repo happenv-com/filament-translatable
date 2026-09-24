@@ -1,28 +1,76 @@
-name: PHPStan
+name: 'PHPStan'
 
 on:
   push:
+    branches:
+      - '*.x'
+      - main
+      - develop
     paths:
       - '**.php'
+      - 'composer.json'
       - 'phpstan.neon.dist'
+      - 'phpstan-baseline.neon'
+      - '.github/workflows/phpstan.yml'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'phpstan.neon.dist'
+      - 'phpstan-baseline.neon'
+      - '.github/workflows/phpstan.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   phpstan:
-    name: phpstan
+    name: phpstan - F${{ matrix.filament }}
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 10
+
+    # One leg per supported Filament major: the APIs differ between them, and
+    # code that only type-checks against one of them is a bug for the other.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - filament: '4'
+            filament-constraint: '^4.13.3'
+          - filament: '5'
+            filament-constraint: '^5.8.3'
+
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: '8.4'
           coverage: none
 
-      - name: Install composer dependencies
-        uses: ramsey/composer-install@v4
-        with:
-          composer-options: '--dev --optimize-autoloader'
+      - name: Install dependencies
+        env:
+          FILAMENT: ${{ matrix.filament-constraint }}
+        run: |
+          composer require "filament/filament:${FILAMENT}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress --with-all-dependencies
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan --error-format=github
+        run: vendor/bin/phpstan analyse --error-format=github --no-progress

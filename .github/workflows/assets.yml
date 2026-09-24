@@ -1,0 +1,94 @@
+name: 'Assets'
+
+# resources/dist is committed and served by Filament as is, so it has to match
+# what the sources build to. The stylesheet is built by the Tailwind CLI from
+# resources/css, with the utilities used in resources/views and src. A change
+# to any of them without a rebuild ships the OLD assets; this check refuses it.
+
+on:
+  push:
+    branches:
+      - '*.x'
+      - main
+      - develop
+    paths:
+      - 'resources/css/**'
+      # Tailwind generates the utilities it finds in the views and src.
+      - 'resources/views/**'
+      - 'src/**'
+      - 'resources/dist/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.nvmrc'
+      - '.prettierrc'
+      - '.prettierignore'
+      - '.github/workflows/assets.yml'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - 'resources/css/**'
+      # Tailwind generates the utilities it finds in the views and src.
+      - 'resources/views/**'
+      - 'src/**'
+      - 'resources/dist/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.nvmrc'
+      - '.prettierrc'
+      - '.prettierignore'
+      - '.github/workflows/assets.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: check built assets
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          # The same Node the maintainers build with — resources/dist is compared
+          # byte for byte.
+          node-version-file: .nvmrc
+          # No npm cache: restoring it is a cache-poisoning surface (zizmor), and
+          # `npm ci` of a handful of build tools takes seconds anyway.
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Check formatting (Prettier)
+        run: npm run lint
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Check resources/dist is up to date
+        run: |
+          if [ -n "$(git status --porcelain -- resources/dist)" ]; then
+            git status --short -- resources/dist
+            git diff --stat -- resources/dist
+            echo "::error::resources/dist is out of date. Run \`npm run build\` and commit the result."
+            exit 1
+          fi

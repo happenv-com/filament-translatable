@@ -1,0 +1,23 @@
+# zizmor configuration — https://docs.zizmor.sh/configuration/
+#
+# Findings ignored below are reviewed, accepted risks — not unaudited noise.
+#
+# Only workflow-trigger-level Dependabot exceptions live here (they apply to a
+# whole `on:` / `if:` block and follow GitHub's documented auto-merge pattern).
+# Every other accepted finding is suppressed inline at the exact site with a
+# `# zizmor: ignore[<rule>] <reason>` comment — grep the workflows for `zizmor: ignore`.
+rules:
+  # Dependabot auto-merge follows GitHub's documented pattern:
+  # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#enable-auto-merge-on-a-pull-request
+  # `pull_request_target` is required to obtain a write token for merging, and the
+  # workflow never checks out or executes PR code — it only calls `gh`, and merges
+  # only after every other check on the PR has passed.
+  dangerous-triggers:
+    ignore:
+      - dependabot-auto-merge.yml
+  # The `github.actor == 'dependabot[bot]'` gate is the documented check; even if
+  # spoofed, the merge waits for every other check. fetch-metadata also only
+  # resolves for genuine Dependabot PRs.
+  bot-conditions:
+    ignore:
+      - dependabot-auto-merge.yml

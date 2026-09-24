@@ -1,0 +1,45 @@
+name: 'PR title'
+
+# PRs are squash-merged, so the PR title becomes the commit on the release
+# branch and the line in the generated release notes — and from there in
+# CHANGELOG.md. It has to follow Conventional Commits.
+
+on:
+  pull_request:
+    # `edited`: re-check after a title change. `ready_for_review`: a draft is
+    # checked only once it is ready (see the draft condition below).
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+
+# Passing or failing the status needs no token permissions at all.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint-title:
+    name: lint-title
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 2
+
+    steps:
+      - name: Validate PR title (Conventional Commits)
+        # The title travels through env, never inline in the script — no
+        # template injection.
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR title: ${PR_TITLE}"
+          if ! printf '%s' "${PR_TITLE}" | grep -qsE '^(feat|fix|chore|docs|refactor|test|perf|build|ci|style|revert)(\([a-z0-9,_./-]+\))?(!)?: .+'; then
+            echo "::error::The PR title must follow Conventional Commits, e.g. 'feat: add X' or 'fix(forms): Y'."
+            echo "Allowed types: feat, fix, chore, docs, refactor, test, perf, build, ci, style, revert"
+            echo "Optional scope in parentheses, e.g. fix(tables): ...  |  breaking change: feat!: ..."
+            exit 1
+          fi

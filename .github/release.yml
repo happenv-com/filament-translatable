@@ -1,0 +1,29 @@
+# Grouping for "Generate release notes" on a GitHub release. The generated notes
+# do not end on GitHub: update-changelog.yml writes them into CHANGELOG.md, so
+# this grouping is the changelog's structure too.
+#
+# ORDER MATTERS: a PR lands in the FIRST category whose label it carries, and
+# only there. Label PRs as you merge them; anything unlabelled ends up in "Other".
+changelog:
+  exclude:
+    labels:
+      - 'skip-changelog'
+  categories:
+    - title: Breaking changes
+      labels:
+        - 'breaking-change'
+    - title: Features
+      labels:
+        - 'enhancement'
+        - 'feature'
+    - title: Fixes
+      labels:
+        - 'bug'
+    - title: Dependencies
+      labels:
+        - 'dependencies'
+    # Safety net: a category list without `*` silently DROPS unlabelled PRs
+    # from the release notes.
+    - title: Other
+      labels:
+        - '*'

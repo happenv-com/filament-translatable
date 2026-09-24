@@ -1,0 +1,52 @@
+name: 'Leaking Secrets Detection'
+
+on:
+  push:
+    branches:
+      - '*.x'
+      - main
+      - develop
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: scan
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # TruffleHog scans the commit range of the push / PR, so it needs the
+          # history, not just the tip.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # A self-hosted runner's Docker daemon may hold stale GHCR credentials
+      # (~/.docker/config.json on the host), which turns the anonymous pull of
+      # the public TruffleHog image into a failing "denied". On a GitHub-hosted
+      # runner this is a no-op.
+      - name: Clear stale GHCR credentials
+        run: docker logout ghcr.io
+
+      - name: Secret scanning
+        uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
+        with:
+          extra_args: --results=verified,unknown
