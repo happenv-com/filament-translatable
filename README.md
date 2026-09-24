@@ -1,32 +1,22 @@
 # Filament Translatable
 
-<p align="center" class="flex items-center justify-center">
-    <a href="https://filamentphp.com/docs/4.x/introduction/overview">
-        <img alt="FILAMENT 4.x" src="https://img.shields.io/badge/FILAMENT-4.x-EBB304?style=for-the-badge">
-    </a>
-    <a href="https://filamentphp.com/docs/5.x/introduction/overview">
-        <img alt="FILAMENT 5.x" src="https://img.shields.io/badge/FILAMENT-5.x-EBB304?style=for-the-badge">
-    </a>
-    <a href="https://packagist.org/packages/happenv-com/filament-translatable">
-        <img alt="Packagist" src="https://img.shields.io/packagist/v/happenv-com/filament-translatable.svg?style=for-the-badge&logo=packagist">
-    </a>
-    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arun-tests+branch%3A5.x" class="filament-hidden">
-        <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/run-tests.yml?style=for-the-badge&logo=github&label=tests">
-    </a>
-    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Aphpstan+branch%3A5.x" class="filament-hidden">
-        <img alt="PHPStan Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/phpstan.yml?style=for-the-badge&logo=github&label=phpstan">
-    </a>
-    <a href="https://github.com/happenv-com/filament-translatable/actions?query=workflow%3Arector+branch%3A5.x" class="filament-hidden">
-        <img alt="Rector Passing" src="https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/rector.yml?style=for-the-badge&logo=github&label=rector">
-    </a>
-    <a href="https://packagist.org/packages/happenv-com/filament-translatable">
-        <img alt="Downloads" src="https://img.shields.io/packagist/dt/happenv-com/filament-translatable.svg?style=for-the-badge" >
-    </a>
-</p>
+[![Latest Version](https://img.shields.io/github/v/release/happenv-com/filament-translatable?style=flat-square&label=version)](https://github.com/happenv-com/filament-translatable/releases)
+[![Tests](https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/tests.yml?label=tests&style=flat-square)](https://github.com/happenv-com/filament-translatable/actions/workflows/tests.yml)
+[![PHPStan](https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/phpstan.yml?label=phpstan&style=flat-square)](https://github.com/happenv-com/filament-translatable/actions/workflows/phpstan.yml)
+[![Quality](https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/quality.yml?label=code%20quality&style=flat-square)](https://github.com/happenv-com/filament-translatable/actions/workflows/quality.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/happenv-com/filament-translatable.svg?style=flat-square)](https://packagist.org/packages/happenv-com/filament-translatable)
+[![License](https://img.shields.io/github/license/happenv-com/filament-translatable.svg?style=flat-square)](LICENSE.md)
 
 **Filament Translatable** is a flexible package that provides a complete solution for managing multilingual content in [Filament](https://filamentphp.com) admin panels. It allows you to easily create translatable form fields with an intuitive tabbed interface, supporting multiple locales and translation packages.
 
-## Key Features
+```php
+use Filament\Forms\Components\TextInput;
+
+TextInput::make('name')
+    ->translatable()
+```
+
+## Key features
 
 - **Multiple translation backends** — supports both [spatie/laravel-translatable](https://github.com/spatie/laravel-translatable) and [astrotomic/laravel-translatable](https://github.com/astrotomic/laravel-translatable)
 - **Two usage modes** — use the quick `translatable()` macro on any field, or the full `Translations` component for advanced scenarios
@@ -44,7 +34,15 @@
   <img alt="translatable component" src="https://raw.githubusercontent.com/happenv-com/filament-translatable/refs/heads/v3/screenshots/component-light.png">
 </picture>
 
-## Installation
+## Requirements
+
+| Package  | Versions  |
+| -------- | --------- |
+| PHP      | 8.3 – 8.5 |
+| Laravel  | 12, 13    |
+| Filament | 4, 5      |
+
+Translations are stored by [spatie/laravel-translatable](https://github.com/spatie/laravel-translatable) (default) or [astrotomic/laravel-translatable](https://github.com/astrotomic/laravel-translatable) — install the one you use.
 
 | Filament Version | Filament Translatable Version    |
 | ---------------- | -------------------------------- |
@@ -53,7 +51,7 @@
 
 Filament 3 is not supported by any version of this package.
 
-Upgrading from 4.x? See [UPGRADING.md](UPGRADING.md).
+## Installation
 
 You can install the package via composer:
 
@@ -67,13 +65,28 @@ Publish the assets:
 php artisan filament:assets
 ```
 
+Optionally, register the plugin in your panel provider to configure the package per panel (see [Where settings come from](#where-settings-come-from)):
+
+```php
+use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->plugin(FilamentTranslatablePlugin::make());
+}
+```
+
 ## Configuration
 
-### With `spatie/laravel-translatable`
+### Translation backends
+
+#### With `spatie/laravel-translatable`
 
 The [Spatie](https://github.com/spatie/laravel-translatable) package is the default translation backend. Follow the instructions in the [Spatie documentation](https://github.com/spatie/laravel-translatable/?tab=readme-ov-file#a-trait-to-make-eloquent-models-translatable) to properly configure your models.
 
-### With `astrotomic/laravel-translatable`
+#### With `astrotomic/laravel-translatable`
 
 The [Astrotomic](https://github.com/astrotomic/laravel-translatable) package is an alternative translation backend.
 
@@ -104,19 +117,6 @@ TextInput::make('name')
 ```
 
 `translationMode()` accepts `TranslationMode::Spatie`, `TranslationMode::Astrotomic` or your own implementation of `Happenv\FilamentTranslatable\Drivers\TranslationDriver`.
-
-## Setup
-
-```php
-use Happenv\FilamentTranslatable\FilamentTranslatablePlugin;
-
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        // ...
-        ->plugin(FilamentTranslatablePlugin::make());
-}
-```
 
 ### Where settings come from
 
@@ -200,6 +200,14 @@ You can enable or disable locale names in locale labels (enabled by default):
 ```php
 FilamentTranslatablePlugin::make()
     ->displayNamesInLocaleLabels(false)
+```
+
+### Publishing the views
+
+To publish the views, run:
+
+```bash
+php artisan vendor:publish --tag="filament-translatable-views"
 ```
 
 ## Usage
@@ -575,39 +583,56 @@ With `include(['title'])`:
 }
 ```
 
-## Publishing Views
-
-To publish the views, run:
+## Development
 
 ```bash
-php artisan vendor:publish --tag="filament-translatable-views"
+composer test          # unit and feature tests
+composer phpstan       # static analysis
+composer cs            # fix code style: composer normalize, Rector, Pint
+composer ci            # everything CI checks, locally
 ```
 
-## Testing
+The package's stylesheet is built by the Tailwind CLI from `resources/css/app.css` — with the utilities used in `resources/views` and `src` — into `resources/dist`, which is committed. After changing any of them, rebuild and commit the result — CI refuses outdated assets:
 
 ```bash
-composer test
+npm ci
+npm run build   # or `npm run dev` to rebuild on change
+npm run lint    # Prettier check, as in CI
 ```
+
+## Upgrading
+
+Breaking changes and how to migrate are described in [UPGRADING](UPGRADING.md) for every major version. Upgrading from 4.x? Start there.
 
 ## Changelog
 
-See [GitHub Releases](https://github.com/happenv-com/filament-translatable/releases) for what has changed in each version, and [UPGRADING.md](UPGRADING.md) for breaking changes between major versions.
+See [CHANGELOG](CHANGELOG.md) and [GitHub releases](https://github.com/happenv-com/filament-translatable/releases) for what has changed recently.
 
 ## Contributing
 
 See [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-## Security Vulnerabilities
+## Security vulnerabilities
 
-If you discover any security-related issues, please email code@happenv.com instead of using the issue tracker.
+Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
 
 ## Credits
 
+- [Happenv sp. z o.o.](https://happenv.com)
+- [webard](https://github.com/webard)
 - [Lipis](https://github.com/lipis/flag-icons) for icons
 - [Solution Forest](https://github.com/solutionforest/filament-translate-field) for great inspiration
 - [Outer Web](https://github.com/outer-web/filament-translatable-fields) for the macro idea
-- [All Contributors](../../contributors)
+- [All contributors](../../contributors)
 
 ## License
 
-Filament Translatable is open-sourced software licensed under the [MIT license](LICENSE.md).
+The MIT License (MIT). See [License File](LICENSE.md) for more information.
+
+---
+
+<p align="center">
+    <a href="https://happenv.com">
+        <img src="art/happenv-logo.png" alt="Happenv" width="400">
+    </a>
+</p>
