@@ -3,10 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use RectorLaravel\Rector\Class_\EmptyGuardedPropertyToUnguardedAttributeRector;
-use RectorLaravel\Rector\Class_\FillablePropertyToFillableAttributeRector;
-use RectorLaravel\Rector\Class_\TablePropertyToTableAttributeRector;
-use RectorLaravel\Rector\Class_\WithoutTimestampsPropertyToWithoutTimestampsAttributeRector;
+use RectorLaravel\Set\LaravelLevelSetList;
 
 /*
  * Library, not an application: no privatization and no "treat classes as
@@ -19,21 +16,18 @@ return RectorConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
-    // `laravel: true` applies the driftingly/rector-laravel sets for the
-    // installed laravel/framework version.
-    ->withComposerBased(laravel: true)
+    // The LOWEST Laravel the package supports, not the installed one:
+    // `withComposerBased(laravel: true)` would follow the newest Laravel that
+    // `composer update` resolves and rewrite code into forms (e.g. Laravel 13
+    // Eloquent attributes) that break the older versions CI still tests.
+    // Raise it when the package drops a Laravel version.
+    ->withSets([
+        LaravelLevelSetList::UP_TO_LARAVEL_120,
+    ])
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
         typeDeclarations: true,
         earlyReturn: true,
     )
-    ->withPhpSets()
-    ->withSkip([
-        // Laravel 13 Eloquent attributes (#[Table], #[Fillable], ...): the test
-        // models must keep working on Laravel 12, which CI still covers.
-        EmptyGuardedPropertyToUnguardedAttributeRector::class,
-        FillablePropertyToFillableAttributeRector::class,
-        TablePropertyToTableAttributeRector::class,
-        WithoutTimestampsPropertyToWithoutTimestampsAttributeRector::class,
-    ]);
+    ->withPhpSets();
