@@ -1,5 +1,11 @@
 # Filament Translatable
 
+<div class="filament-hidden">
+
+![Filament Translatable](art/banner.png)
+
+</div>
+
 [![Latest Version](https://img.shields.io/github/v/release/happenv-com/filament-translatable?style=flat-square&label=version)](https://github.com/happenv-com/filament-translatable/releases)
 [![Tests](https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/tests.yml?label=tests&style=flat-square)](https://github.com/happenv-com/filament-translatable/actions/workflows/tests.yml)
 [![PHPStan](https://img.shields.io/github/actions/workflow/status/happenv-com/filament-translatable/phpstan.yml?label=phpstan&style=flat-square)](https://github.com/happenv-com/filament-translatable/actions/workflows/phpstan.yml)
