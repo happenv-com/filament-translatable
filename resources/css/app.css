@@ -1,3 +1,20 @@
+/*
+ * Every rule ships inside a cascade layer, in Tailwind's own layer order.
+ *
+ * Filament loads this stylesheet next to the application's Tailwind v4 theme,
+ * whose utilities all live in `@layer utilities`. An unlayered rule beats ANY
+ * layered rule, whatever the load order, so an unlayered `.hidden` or `.p-4`
+ * from here would silently defeat the application's `sm:block` or `sm:p-6`
+ * on every page of the panel — not only on the translatable field. Inside the
+ * same layer the application's theme, loaded after the plugin stylesheets,
+ * wins as it should.
+ *
+ * The layer statement comes first so that, should this stylesheet be the
+ * first to name the layers on a page, `utilities` still ends up above `base`
+ * and `components`.
+ */
+@layer properties, theme, base, components, utilities;
+
 @reference "tailwindcss";
 
 /*
@@ -6,33 +23,29 @@
  * (README, docs, untracked files). `npm run build` must reproduce
  * resources/dist byte for byte, which assets.yml checks.
  */
-@tailwind utilities source(none);
+@layer utilities {
+    @tailwind utilities source(none);
+}
 @source '../views';
 @source '../../src';
 
 /* Safelist classes to ensure they are always included */
-.h-0 {
-    height: 0px;
-}
-.p-0 {
-    padding: 0px;
-}
-.p-6 {
-    padding: 1.5rem;
-}
+@source inline('h-0 p-0 p-6');
 
-.fi-tt-tabs {
-    @apply flex grow;
-}
+@layer components {
+    .fi-tt-tabs {
+        @apply flex grow;
+    }
 
-.fi-tt-tabs-vertical {
-    @apply flex grow flex-col;
-}
+    .fi-tt-tabs-vertical {
+        @apply flex grow flex-col;
+    }
 
-.fi-tt-tabs-langs {
-    @apply flex flex-auto gap-1;
-}
+    .fi-tt-tabs-langs {
+        @apply flex flex-auto gap-1;
+    }
 
-.fi-tt-action-hidden {
-    @apply hidden;
+    .fi-tt-action-hidden {
+        @apply hidden;
+    }
 }
