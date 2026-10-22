@@ -56,7 +56,7 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
         with:
           # Pinned: the action defaults to `latest`, so a zizmor release would
           # change this gate with no commit in the repository. Bump it on purpose,
@@ -70,7 +70,7 @@ jobs:
       # Non-blocking early warning: the stricter `pedantic` findings as
       # annotations, so drift is visible before it becomes a real finding.
       - name: Run zizmor (pedantic, non-blocking)
-        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
         continue-on-error: true
         with:
           version: 1.29.0
