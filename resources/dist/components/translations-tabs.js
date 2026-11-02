@@ -35,23 +35,29 @@ export default function translationsTabsComponent({
 
             this.autofocusFields(true)
 
-            this.unsubscribeLivewireHook = Livewire.interceptMessage(
-                ({ message, onSuccess }) => {
-                    onSuccess(() => {
-                        this.$nextTick(() => {
-                            if (message.component.id !== livewireId) {
-                                return
-                            }
+            const syncTabAfterUpdate = (component) => {
+                this.$nextTick(() => {
+                    if (component.id !== livewireId) {
+                        return
+                    }
 
-                            const tabs = this.getTabs()
+                    const tabs = this.getTabs()
 
-                            if (!tabs.includes(this.tab)) {
-                                this.tab = tabs[activeTab - 1] ?? this.tab
-                            }
-                        })
-                    })
-                },
-            )
+                    if (!tabs.includes(this.tab)) {
+                        this.tab = tabs[activeTab - 1] ?? this.tab
+                    }
+                })
+            }
+
+            // Livewire 4 (Filament 5) has interceptMessage; Livewire 3 (Filament 4) only the commit hook.
+            this.unsubscribeLivewireHook =
+                typeof Livewire.interceptMessage === 'function'
+                    ? Livewire.interceptMessage(({ message, onSuccess }) => {
+                          onSuccess(() => syncTabAfterUpdate(message.component))
+                      })
+                    : Livewire.hook('commit', ({ component, succeed }) => {
+                          succeed(() => syncTabAfterUpdate(component))
+                      })
         },
 
         getTabs() {
