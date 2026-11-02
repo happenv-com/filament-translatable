@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Happenv\FilamentTranslatable\Forms\Component\Translations;
 
 class Tab extends \Filament\Schemas\Components\Tabs\Tab
