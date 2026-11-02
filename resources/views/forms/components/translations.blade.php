@@ -25,8 +25,8 @@
 @if (blank($livewireProperty))
     <div
         x-load
-        x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('tabs', 'filament/schemas') }}"
-        x-data="tabsSchemaComponent({
+        x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('translations-tabs', 'happenv-com/filament-translatable') }}"
+        x-data="translationsTabsComponent({
             activeTab: @js($activeTab),
             isTabPersistedInQueryString: @js($isTabPersistedInQueryString()),
             livewireId: @js($this->getId()),
