@@ -4,6 +4,7 @@ namespace Happenv\FilamentTranslatable;
 
 use Closure;
 use Filament\Forms\Components\Field;
+use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
@@ -83,6 +84,7 @@ class FilamentTranslatableServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
+            AlpineComponent::make('translations-tabs', __DIR__ . '/../resources/dist/components/translations-tabs.js'),
             Css::make('filament-translatable-styles', __DIR__ . '/../resources/dist/filament-translatable.css'),
         ];
     }
