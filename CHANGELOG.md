@@ -2,6 +2,24 @@
 
 All notable changes to `filament-translatable` are documented in this file. Each section is written automatically from the GitHub release notes when a release is published — do not edit it by hand.
 
+## v5.0.2 - 2026-11-02
+
+<!-- Release notes generated using configuration in .github/release.yml at 5.x -->
+### What's Changed
+
+#### Dependencies
+
+* chore(deps-dev): bump follow-redirects from 1.16.0 to 1.16.1 by @dependabot[bot] in https://github.com/happenv-com/filament-translatable/pull/38
+* chore(deps): bump the github-actions group across 1 directory with 4 updates by @dependabot[bot] in https://github.com/happenv-com/filament-translatable/pull/39
+* chore(deps-dev): bump prettier from 3.9.9 to 3.9.10 in the npm group by @dependabot[bot] in https://github.com/happenv-com/filament-translatable/pull/40
+* chore(deps): bump the github-actions group with 2 updates by @dependabot[bot] in https://github.com/happenv-com/filament-translatable/pull/41
+
+#### Other
+
+* fix: drive translation tabs with an own Alpine component by @webard in https://github.com/happenv-com/filament-translatable/pull/42
+
+**Full Changelog**: https://github.com/happenv-com/filament-translatable/compare/v5.0.1...v5.0.2
+
 ## v5.0.1 - 2026-10-16
 
 <!-- Release notes generated using configuration in .github/release.yml at 5.x -->
