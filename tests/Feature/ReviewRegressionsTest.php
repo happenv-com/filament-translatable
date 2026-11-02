@@ -6,6 +6,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Support\Facades\FilamentAsset;
 use Happenv\FilamentTranslatable\Enums\TranslationMode;
 use Happenv\FilamentTranslatable\Forms\Component\Translations;
 use Happenv\FilamentTranslatable\Forms\Component\Translations\Tab;
@@ -44,6 +45,21 @@ it('shows tab panels under the same key the tab buttons select', function (): vo
     }
 
     $component->assertDontSeeHtml("tab !== 'form.");
+});
+
+it('drives its tabs with its own Alpine component instead of the Filament tabs component', function (): void {
+    // Filament's tabsSchemaComponent requires the markup of Filament's own tabs view (#37)
+    SchemaForm::$componentsUsing = fn (): array => [
+        Translations::make('translations')
+            ->locales(['en', 'pl'])
+            ->schema([TextInput::make('title')]),
+    ];
+
+    livewire(SchemaForm::class)
+        ->assertSeeHtml('x-data="translationsTabsComponent(')
+        ->assertSeeHtml(e(FilamentAsset::getAlpineComponentSrc('translations-tabs', 'happenv-com/filament-translatable')))
+        ->assertDontSeeHtml('tabsSchemaComponent(')
+        ->assertDontSeeHtml(e(FilamentAsset::getAlpineComponentSrc('tabs', 'filament/schemas')));
 });
 
 it('loads casted field types from the record', function (TranslationMode $mode): void {
