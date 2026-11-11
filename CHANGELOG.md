@@ -2,6 +2,22 @@
 
 All notable changes to `filament-translatable` are documented in this file. Each section is written automatically from the GitHub release notes when a release is published — do not edit it by hand.
 
+## v5.0.3 - 2026-11-11
+
+<!-- Release notes generated using configuration in .github/release.yml at 5.x -->
+### What's Changed
+
+#### Dependencies
+
+* chore(deps-dev): bump follow-redirects from 1.16.1 to 1.16.2 by @dependabot[bot] in https://github.com/happenv-com/filament-translatable/pull/45
+* chore(deps): bump the github-actions group with 2 updates by @dependabot[bot] in https://github.com/happenv-com/filament-translatable/pull/46
+
+#### Other
+
+* docs: ship a Laravel Boost skill by @webard in https://github.com/happenv-com/filament-translatable/pull/47
+
+**Full Changelog**: https://github.com/happenv-com/filament-translatable/compare/v5.0.2...v5.0.3
+
 ## v5.0.2 - 2026-11-02
 
 <!-- Release notes generated using configuration in .github/release.yml at 5.x -->
