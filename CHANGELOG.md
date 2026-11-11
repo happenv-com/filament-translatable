@@ -2,6 +2,17 @@
 
 All notable changes to `filament-translatable` are documented in this file. Each section is written automatically from the GitHub release notes when a release is published — do not edit it by hand.
 
+## v5.0.4 - 2026-11-11
+
+<!-- Release notes generated using configuration in .github/release.yml at 5.x -->
+### What's Changed
+
+#### Other
+
+* chore: keep dev-only files out of the Composer dist archive by @webard in https://github.com/happenv-com/filament-translatable/pull/48
+
+**Full Changelog**: https://github.com/happenv-com/filament-translatable/compare/v5.0.3...v5.0.4
+
 ## v5.0.3 - 2026-11-11
 
 <!-- Release notes generated using configuration in .github/release.yml at 5.x -->
