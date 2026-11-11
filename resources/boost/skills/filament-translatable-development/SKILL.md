@@ -165,7 +165,10 @@ livewire(EditPost::class, ['record' => $post->getKey()])
     ->assertSchemaStateSet(['title' => ['en' => 'Hello', 'pl' => 'Cześć']])
     ->fillForm(['title' => ['en' => null, 'pl' => 'Witaj']])
     ->call('save')
-    ->assertHasFormErrors(['title.en' => 'required']);
+    ->assertHasFormErrors(['title.en' => 'required'])     // nothing saved
+    ->fillForm(['title' => ['en' => 'Hello', 'pl' => 'Witaj']])
+    ->call('save')
+    ->assertHasNoFormErrors();
 
 // Astrotomic
 livewire(CreatePost::class)
