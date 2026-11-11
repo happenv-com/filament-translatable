@@ -589,6 +589,10 @@ With `include(['title'])`:
 }
 ```
 
+## AI assistants (Laravel Boost)
+
+The package ships a [Laravel Boost](https://laravel.com/docs/boost) skill, `filament-translatable-development`, in `resources/boost/skills/`. `php artisan boost:install` (or `boost:update`) offers it to your coding agent: the `translatable()` macro and the `Translations` component, where settings come from, the form state each translation mode uses, and how to test a translatable form.
+
 ## Development
 
 ```bash
