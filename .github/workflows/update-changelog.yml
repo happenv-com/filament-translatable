@@ -42,11 +42,34 @@ jobs:
           # stay configured in git for git-auto-commit-action.
           persist-credentials: true # zizmor: ignore[artipacked]
 
-      - name: Update CHANGELOG
-        uses: stefanzweifel/changelog-updater-action@a938690fad7edf25368f37e43a1ed1b34303eb36 # v1.12.0
+      # The action's Docker image is built from an unpinned `php:cli-alpine`, which
+      # moved to PHP 8.6 without mbstring (stefanzweifel/changelog-updater-action#52)
+      # and broke every release. Its PHAR runs here on a pinned PHP instead: the same
+      # tool at the same commit (v1.12.0), checked against its SHA-256.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
-          latest-version: ${{ github.event.release.tag_name }}
-          release-notes: ${{ github.event.release.body }}
+          php-version: '8.4'
+          extensions: mbstring
+          coverage: none
+
+      - name: Update CHANGELOG
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+          LATEST_VERSION: ${{ github.event.release.tag_name }}
+          UPDATER_URL: https://raw.githubusercontent.com/stefanzweifel/changelog-updater-action/a938690fad7edf25368f37e43a1ed1b34303eb36/changelog-updater
+          UPDATER_SHA256: 236cd787c8dd1203c1c8ad298a23edba1075172d6232a819483f77efce09c80f
+        run: |
+          updater="$RUNNER_TEMP/changelog-updater"
+          curl -fsSL --retry 3 --retry-all-errors -o "$updater" "$UPDATER_URL"
+          echo "$UPDATER_SHA256  $updater" | sha256sum -c -
+          php -d error_reporting='E_ALL & ~E_DEPRECATED' "$updater" update \
+            --release-notes="$RELEASE_NOTES" \
+            --latest-version="$LATEST_VERSION" \
+            --path-to-changelog=CHANGELOG.md \
+            --compare-url-target-revision=HEAD \
+            --write \
+            --no-interaction
 
       - name: Commit updated CHANGELOG
         # zizmor: ignore[superfluous-actions] deliberate: the dedicated action commits and pushes CHANGELOG.md with the persisted token
