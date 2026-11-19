@@ -109,4 +109,4 @@ jobs:
         run: composer show -D
 
       - name: Execute tests
-        run: vendor/bin/pest --ci --testsuite=Unit,Feature
+        run: vendor/bin/pest --ci --testsuite=Unit,Feature --parallel

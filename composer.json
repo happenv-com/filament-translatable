@@ -112,7 +112,7 @@
         "pint-test": "pint --test",
         "rector": "rector process",
         "rector-test": "rector process --dry-run",
-        "test": "pest --testsuite=Unit,Feature",
+        "test": "pest --testsuite=Unit,Feature --parallel",
         "test-coverage": "pest --testsuite=Unit,Feature --coverage"
     },
     "scripts-descriptions": {
